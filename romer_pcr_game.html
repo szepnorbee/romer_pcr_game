@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Romer Labs - PCR Challenge</title>
+    <style>
+        /* --- ROMER LABS BRANDING & LAB STYLING --- */
+        :root {
+            --romer-red: #E20613; 
+            --romer-gray: #575756;
+            --plate-white: #fdfdfd;
+            --plate-shadow: #d1d1d1;
+            --well-shadow: inset 2px 2px 5px rgba(0,0,0,0.15), inset -1px -1px 2px rgba(255,255,255,0.9);
+            /* Visuals for liquids */
+            --liquid-red: radial-gradient(circle at 35% 35%, #ff8a90, #E20613); /* Romer Standard */
+            --liquid-green: radial-gradient(circle at 35% 35%, #b8e986, #7ab800); /* Contaminant */
+            --font-main: "Roboto", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #f0f2f5;
+            color: var(--romer-gray);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+            /* Lab bench texture */
+            background-image: radial-gradient(#ccc 1px, transparent 1px);
+            background-size: 20px 20px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--romer-red);
+        }
+        
+        h1 { margin: 0; font-size: 1.5rem; color: var(--romer-gray); text-transform: uppercase; letter-spacing: 1px; }
+        h1 span { color: var(--romer-red); font-weight: 900; }
+        .tagline { font-size: 0.8rem; color: #888; margin-top: 5px; font-weight: 500; }
+
+        /* --- CONTROLS --- */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background: var(--romer-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 5px rgba(226, 6, 19, 0.3);
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+        
+        select {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: white;
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            color: var(--romer-gray);
+        }
+
+        .status-badge {
+            margin-bottom: 15px;
+            padding: 8px 20px;
+            background: #e8f4f8;
+            color: #0077cc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-left: 4px solid #0077cc;
+            text-align: center;
+            min-width: 250px;
+        }
+
+        /* --- PCR PLATE (THE BOARD) --- */
+        .plate-container {
+            position: relative;
+            padding: 25px 15px 15px 35px; /* Space for grid labels */
+            background: var(--plate-white);
+            border-radius: 8px;
+            box-shadow: 
+                0 15px 35px rgba(0,0,0,0.1), 
+                0 0 0 1px #ccc,
+                inset 0 0 30px rgba(0,0,0,0.03);
+            /* Cut corner (Standard PCR plate feature) */
+            clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);
+        }
+
+        /* Grid Labels */
+        .grid-labels-top {
+            position: absolute; top: 5px; left: 35px; right: 15px;
+            display: flex; justify-content: space-around;
+            font-size: 10px; color: #aaa; font-weight: bold; font-family: monospace;
+        }
+        .grid-labels-left {
+            position: absolute; top: 25px; left: 8px; bottom: 15px;
+            display: flex; flex-direction: column; justify-content: space-around;
+            font-size: 10px; color: #aaa; font-weight: bold; font-family: monospace;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        /* Hover effect (Desktop only) */
+        @media(hover:hover) {
+            .column:hover .well { background-color: #eaeaea; }
+        }
+
+        /* --- WELLS --- */
+        .well {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: #f4f4f4;
+            border-radius: 50%;
+            box-shadow: var(--well-shadow);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- LIQUID (TOKENS) --- */
+        .liquid {
+            width: 75%;
+            height: 75%;
+            border-radius: 50%;
+            position: absolute;
+            transform: scale(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            opacity: 0.9;
+        }
+
+        /* Liquid Highlight/Reflection */
+        .liquid::after {
+            content: '';
+            position: absolute;
+            top: 20%; left: 20%;
+            width: 25%; height: 25%;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .liquid.red { background: var(--liquid-red); }
+        .liquid.green { background: var(--liquid-green); }
+
+        /* Animation: Filling the well */
+        .pipette-drop {
+            animation: fillWell 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes fillWell {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.95; }
+        }
+
+        /* Winning Line Pulse */
+        .winner-well .liquid {
+            box-shadow: 0 0 15px var(--romer-red);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { filter: brightness(1); transform: scale(1); }
+            50% { filter: brightness(1.3); transform: scale(1.05); }
+            100% { filter: brightness(1); transform: scale(1); }
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 90%;
+            width: 320px;
+            border-top: 6px solid var(--romer-red);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-card h2 { color: var(--romer-gray); margin-top: 0; font-size: 1.4rem; }
+        .result-icon { font-size: 3.5rem; margin-bottom: 15px; display: block; }
+        .modal-msg { color: #666; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        
+        .modal-btn {
+            background: var(--romer-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><span>Romer</span> Labs®</h1>
+        <div class="tagline">Making the World's Food Safer</div>
+    </header>
+
+    <div class="status-badge" id="status">Ready for analysis. Select a column.</div>
+
+    <div class="controls">
+        <select id="difficulty">
+            <option value="1">Level 1: Rapid Test</option>
+            <option value="4" selected>Level 2: ELISA</option>
+            <option value="6">Level 3: Reference Method</option>
+        </select>
+        <button onclick="game.resetGame()">NEW TEST</button>
+    </div>
+
+    <div class="plate-container">
+        <div class="grid-labels-top">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+        </div>
+        <div class="grid-labels-left">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+        </div>
+
+        <div id="board-container" class="game-board"></div>
+    </div>
+
+    <div id="result-modal" class="modal">
+        <div class="modal-card">
+            <span id="modal-icon" class="result-icon">🔬</span>
+            <h2 id="modal-title">Result</h2>
+            <p id="modal-msg" class="modal-msg">...</p>
+            <button class="modal-btn" onclick="game.resetGame()">Start New Analysis</button>
+        </div>
+    </div>
+
+<script>
+/**
+ * Romer Labs - PCR Challenge
+ * 2024 - Educational Game
+ */
+
+const ROWS = 6;
+const COLS = 7;
+const PLAYER = 1; // Romer Standard (Red)
+const AI = 2;     // Contaminant (Green)
+const EMPTY = 0;
+
+class PCRGame {
+    constructor() {
+        this.board = [];
+        this.gameActive = true;
+        this.difficulty = 4;
+        this.uiBoard = document.getElementById('board-container');
+        this.statusDisplay = document.getElementById('status');
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.isProcessing = false; // Flag for animation lock
+
+        this.initBoard();
+        this.renderBoard();
+        
+        // Difficulty selector listener
+        document.getElementById('difficulty').addEventListener('change', (e) => {
+            this.difficulty = parseInt(e.target.value);
+            this.resetGame();
+        });
+    }
+
+    initBoard() {
+        this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY));
+    }
+
+    resetGame() {
+        this.initBoard();
+        this.gameActive = true;
+        this.isProcessing = false;
+        this.updateStatus("Ready for analysis. Your turn (Romer Standard).");
+        
+        document.getElementById('result-modal').style.display = 'none';
+        
+        // Clear wells
+        const wells = document.querySelectorAll('.well');
+        wells.forEach(w => {
+            w.innerHTML = '';
+            w.classList.remove('winner-well');
+        });
+    }
+
+    renderBoard() {
+        this.uiBoard.innerHTML = '';
+        for (let c = 0; c < COLS; c++) {
+            const colDiv = document.createElement('div');
+            colDiv.classList.add('column');
+            colDiv.onclick = () => this.handlePipette(c);
+            
+            for (let r = ROWS - 1; r >= 0; r--) {
+                const well = document.createElement('div');
+                well.classList.add('well');
+                well.dataset.row = r;
+                well.dataset.col = c;
+                colDiv.appendChild(well);
+            }
+            this.uiBoard.appendChild(colDiv);
+        }
+    }
+
+    updateStatus(msg) { this.statusDisplay.innerText = msg; }
+
+    getNextOpenRow(col) {
+        for (let r = 0; r < ROWS; r++) {
+            if (this.board[r][col] === EMPTY) return r;
+        }
+        return -1;
+    }
+
+    handlePipette(col) {
+        // Prevent interaction during animations or if game ended
+        if (!this.gameActive || this.isProcessing) return;
+        
+        // Initialize audio on first user interaction
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const row = this.getNextOpenRow(col);
+        if (row !== -1) {
+            this.processMove(row, col, PLAYER);
+        }
+    }
+
+    async processMove(row, col, player) {
+        this.isProcessing = true;
+        this.board[row][col] = player;
+        
+        // Animate and Sound
+        this.fillWell(row, col, player);
+        this.playPipetteSound();
+        
+        // Delay for animation
+        await new Promise(r => setTimeout(r, 450));
+
+        if (this.checkWin(this.board, player)) {
+            this.endGame(player);
+        } else if (this.checkDraw()) {
+            this.endGame(0);
+        } else {
+            this.isProcessing = false;
+            if (player === PLAYER) {
+                this.updateStatus("Analyzing sample... (AI Turn)");
+                setTimeout(() => this.makeAIMove(), 400);
+            } else {
+                this.updateStatus("Your turn.");
+            }
+        }
+    }
+
+    fillWell(row, col, player) {
+        const well = document.querySelector(`.well[data-row='${row}'][data-col='${col}']`);
+        if (well) {
+            const liquid = document.createElement('div');
+            liquid.classList.add('liquid');
+            liquid.classList.add(player === PLAYER ? 'red' : 'green');
+            liquid.classList.add('pipette-drop');
+            well.appendChild(liquid);
+        }
+    }
+
+    playPipetteSound() {
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        // High pitched "bloop" sound
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.1);
+        
+        g.gain.setValueAtTime(0.08, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
+
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.1);
+    }
+
+    endGame(winner) {
+        this.gameActive = false;
+        const modal = document.getElementById('result-modal');
+        const title = document.getElementById('modal-title');
+        const msg = document.getElementById('modal-msg');
+        const icon = document.getElementById('modal-icon');
+
+        modal.style.display = 'flex';
+
+        if (winner === PLAYER) {
+            icon.innerText = "🛡️";
+            title.innerText = "SAMPLE SECURE";
+            title.style.color = "var(--romer-red)";
+            msg.innerText = "Excellent! You have successfully validated the sample safety using Romer Labs diagnostic solutions.";
+            this.highlightWin(PLAYER);
+            this.playWinSound();
+        } else if (winner === AI) {
+            icon.innerText = "⚠️";
+            title.innerText = "CONTAMINATION DETECTED";
+            title.style.color = "#7ab800";
+            msg.innerText = "The contaminant (Green) has reached critical levels. A more sensitive detection method is required.";
+            this.highlightWin(AI);
+        } else {
+            icon.innerText = "⚖️";
+            title.innerText = "RESULT INCONCLUSIVE";
+            title.style.color = "#555";
+            msg.innerText = "The sample analysis is ambiguous. Please run the test again.";
+        }
+    }
+
+    playWinSound() {
+        // Victory Triad (C Major)
+        [523.25, 659.25, 783.99].forEach((f, i) => {
+            const osc = this.ctx.createOscillator();
+            const g = this.ctx.createGain();
+            osc.frequency.value = f;
+            g.gain.value = 0.05;
+            g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 1);
+            osc.connect(g);
+            g.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + i*0.1);
+            osc.stop(this.ctx.currentTime + 1 + i*0.1);
+        });
+    }
+
+    checkDraw() { return this.board.every(row => row.every(cell => cell !== EMPTY)); }
+
+    checkWin(board, player, returnCoords = false) {
+        // Standard Check Logic
+        const rows = 6; const cols = 7;
+        // Horizontal
+        for (let r=0; r<rows; r++) for (let c=0; c<cols-3; c++) 
+            if (board[r][c] == player && board[r][c+1] == player && board[r][c+2] == player && board[r][c+3] == player)
+                return returnCoords ? [[r,c],[r,c+1],[r,c+2],[r,c+3]] : true;
+        // Vertical
+        for (let r=0; r<rows-3; r++) for (let c=0; c<cols; c++) 
+            if (board[r][c] == player && board[r+1][c] == player && board[r+2][c] == player && board[r+3][c] == player)
+                return returnCoords ? [[r,c],[r+1,c],[r+2,c],[r+3,c]] : true;
+        // Diagonal /
+        for (let r=0; r<rows-3; r++) for (let c=0; c<cols-3; c++)
+            if (board[r][c] == player && board[r+1][c+1] == player && board[r+2][c+2] == player && board[r+3][c+3] == player)
+                return returnCoords ? [[r,c],[r+1,c+1],[r+2,c+2],[r+3,c+3]] : true;
+        // Diagonal \
+        for (let r=3; r<rows; r++) for (let c=0; c<cols-3; c++)
+            if (board[r][c] == player && board[r-1][c+1] == player && board[r-2][c+2] == player && board[r-3][c+3] == player)
+                return returnCoords ? [[r,c],[r-1,c+1],[r-2,c+2],[r-3,c+3]] : true;
+        return false;
+    }
+
+    highlightWin(player) {
+        const coords = this.checkWin(this.board, player, true);
+        if (coords) coords.forEach(([r, c]) => {
+            document.querySelector(`.well[data-row='${r}'][data-col='${c}']`)?.classList.add('winner-well');
+        });
+    }
+
+    // --- AI LOGIC (Simplified Minimax) ---
+    makeAIMove() {
+        const valid = [];
+        for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) valid.push(c);
+        
+        let bestCol = valid[Math.floor(Math.random()*valid.length)];
+        
+        // 1. Can AI win now?
+        for(let c of valid) {
+            const r = this.getNextOpenRow(c);
+            this.board[r][c] = AI;
+            if(this.checkWin(this.board, AI)) { bestCol = c; this.board[r][c]=EMPTY; break; }
+            this.board[r][c] = EMPTY;
+        }
+        // 2. Should AI block Player? (90% chance to notice)
+        if (Math.random() > 0.1) {
+            for(let c of valid) {
+                const r = this.getNextOpenRow(c);
+                this.board[r][c] = PLAYER; 
+                if(this.checkWin(this.board, PLAYER)) { bestCol = c; this.board[r][c]=EMPTY; break; } 
+                this.board[r][c] = EMPTY;
+            }
+        }
+
+        const r = this.getNextOpenRow(bestCol);
+        if(r !== -1) this.processMove(r, bestCol, AI);
+    }
+}
+
+// Initialize
+const game = new PCRGame();
+</script>
+</body>
+</html>
