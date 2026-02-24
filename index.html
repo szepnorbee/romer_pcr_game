@@ -3,42 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Romer Labs - PCR Challenge 2.0</title>
+    <title>Romer Labs - Diagnostic Defender</title>
     <style>
-        /* --- MODERN RESET & VARIABLES --- */
+        /* --- CORE STYLES --- */
         * { box-sizing: border-box; }
         
         :root {
-            /* BRAND COLORS */
             --romer-red: #E20613;
-            --romer-red-dark: #b0000a;
-            --romer-gray: #2c3e50;
-            --lab-white: #ffffff;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-
-            /* GAME ASSETS - MODERNIZED */
-            /* Élénkebb, "bio-lumineszcens" gradiensek */
-            --liquid-red-grad: linear-gradient(135deg, #ff7675, var(--romer-red));
-            --liquid-green-grad: linear-gradient(135deg, #55efc4, #00b894);
-            --glow-red: rgba(226, 6, 19, 0.5);
-            --glow-green: rgba(0, 184, 148, 0.5);
-            
-            /* SIZING (VW alapú a reszponzivitásért) */
+            --romer-gray: #333333;
+            --lab-bg: #f4f6f9;
             --well-size: 11.5vw; 
             --gap-size: 1.5vw;
+            
+            /* Dynamic Enemy Colors (CSS Variables updated by JS) */
+            --enemy-color: #7ab800; /* Default Green */
         }
 
-        /* Desktop fix méretek */
         @media (min-width: 550px) {
-            :root {
-                --well-size: 54px;
-                --gap-size: 10px;
-            }
+            :root { --well-size: 54px; --gap-size: 10px; }
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-gradient);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--lab-bg);
             color: var(--romer-gray);
             display: flex;
             flex-direction: column;
@@ -46,209 +33,162 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            /* Subtle Pattern */
+            background-image: radial-gradient(#dfe3e8 1px, transparent 1px);
+            background-size: 20px 20px;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- MODERN HEADER --- */
+        /* --- HEADER & BRANDING --- */
         header {
-            background: var(--lab-white);
-            padding: 15px 25px;
-            border-radius: 12px;
-            /* Finomabb, modernebb árnyék */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--romer-red);
         }
-        /* Kicsi Romer piros akcentus csík alul */
-        header::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
-            background: var(--romer-red);
-        }
-
-        h1 { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        h1 { margin: 0; font-size: 1.8rem; font-weight: 800; color: var(--romer-gray); letter-spacing: -0.5px; }
         h1 span { color: var(--romer-red); }
-        .tagline { font-size: 0.85rem; color: #666; margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
+        .tagline { margin-top: 5px; color: #666; font-size: 0.9rem; font-weight: 500; }
 
-        /* --- UI CONTROLS --- */
-        .status-badge {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--romer-gray);
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 10px;
+        /* --- INFO PANEL (The Educational Part) --- */
+        .info-panel {
+            background: white;
+            border-left: 5px solid var(--romer-red);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .status-dot {
-            width: 10px; height: 10px; background: var(--romer-red); border-radius: 50%;
-            box-shadow: 0 0 10px var(--romer-red); animation: pulseDot 1.5s infinite;
-        }
-        @keyframes pulseDot { 50% { opacity: 0.5; transform: scale(0.8); } }
+        .info-icon { font-size: 2rem; }
+        .info-text h3 { margin: 0 0 5px 0; font-size: 1rem; color: var(--romer-red); }
+        .info-text p { margin: 0; font-size: 0.85rem; line-height: 1.4; color: #555; }
 
+        /* --- CONTROLS --- */
         .controls {
-            display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;
+            display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 500px;
         }
-
-        /* Modern gombok és selectek */
-        select, button {
-            padding: 12px 24px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 700;
-            font-family: inherit;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        select {
-            background: var(--lab-white);
-            color: var(--romer-gray);
-            border: 2px solid transparent;
-        }
-        select:hover { border-color: #e0e0e0; }
-        select:focus { outline: none; border-color: var(--romer-red); }
-
-        button {
-            background: linear-gradient(135deg, var(--romer-red), var(--romer-red-dark));
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(226, 6, 19, 0.3); }
-        button:active { transform: translateY(0); }
         
-        /* --- THE MODERN PCR PLATE (GLASSMORPHISM) --- */
-        .plate-frame {
-            /* Tejüveg hatás */
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            
-            padding: 40px 20px 20px 40px; /* Hely a címkéknek */
-            border-radius: 20px;
-            /* Mélyebb, realisztikusabb árnyék */
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.1),
-                inset 0 0 20px rgba(255,255,255,0.5);
+        select {
+            padding: 12px; border-radius: 6px; border: 1px solid #ccc;
+            font-size: 0.9rem; flex-grow: 1; background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        button.action-btn {
+            background: var(--romer-red); color: white; border: none;
+            padding: 12px 25px; border-radius: 6px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(226, 6, 19, 0.3);
+            transition: transform 0.1s;
+        }
+        button.action-btn:active { transform: translateY(2px); }
+
+        /* --- THE PLATE (Clean & Scientific) --- */
+        .plate-container {
+            background: white;
+            padding: 35px 20px 20px 40px; /* Space for labels */
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1), inset 0 0 0 1px #e0e0e0;
             position: relative;
-            display: inline-block; 
+            display: inline-block;
         }
 
         /* Labels */
-        .label {
-            position: absolute; font-family: monospace; font-size: 12px; color: #888; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+        .grid-labels-top {
+            position: absolute; top: 10px; left: 40px; right: 20px;
+            display: flex; justify-content: space-between;
+            width: calc(7 * var(--well-size) + 6 * var(--gap-size));
+            font-family: monospace; font-size: 12px; color: #999; font-weight: bold;
         }
-        .label-top { top: 10px; width: var(--well-size); text-align: center; }
-        .label-left { left: 10px; height: var(--well-size); vertical-align: middle; }
+        .grid-labels-left {
+            position: absolute; top: 35px; left: 10px; bottom: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: calc(6 * var(--well-size) + 5 * var(--gap-size));
+            font-family: monospace; font-size: 12px; color: #999; font-weight: bold;
+        }
 
-        .game-grid {
-            display: flex; gap: var(--gap-size);
-        }
+        .game-grid { display: flex; gap: var(--gap-size); }
+        .column { display: flex; flex-direction: column; gap: var(--gap-size); cursor: pointer; width: var(--well-size); }
 
-        .column {
-            display: flex; flex-direction: column; gap: var(--gap-size); cursor: pointer; width: var(--well-size);
-        }
-        
-        /* --- HIGH-TECH WELLS --- */
+        /* WELLS & LIQUIDS - NO PULSE, CLEAN LOOK */
         .well {
             width: var(--well-size); height: var(--well-size);
-            background: #ecf0f3; /* Világosabb labor szürke */
+            background: #f0f2f5;
             border-radius: 50%;
-            /* Komplexebb belső árnyék a mélységért */
-            box-shadow: 
-                inset 2px 2px 5px rgba(0,0,0,0.15),
-                inset -2px -2px 5px rgba(255,255,255,0.8);
+            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.15);
             position: relative;
             display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            border: 1px solid #dce1e6;
-            transition: all 0.3s ease;
         }
-
-        /* Hover effect: Fénygyűrű */
+        
+        /* Hover indication */
         @media(hover:hover) {
-            .column:hover .well { 
-                box-shadow: inset 0 0 0 2px var(--romer-red), inset 2px 2px 5px rgba(0,0,0,0.15);
-                background: #fff;
-            }
+            .column:hover .well { background: #eef2ff; }
         }
 
-        /* --- BIO-ACTIVE LIQUID --- */
         .liquid {
-            width: 82%; height: 82%;
+            width: 80%; height: 80%;
             border-radius: 50%;
             position: absolute;
             transform: scale(0);
-            /* Erős külső ragyogás (fluoreszcencia) */
-            box-shadow: 0 0 15px var(--glow-color), inset 0 3px 8px rgba(255,255,255,0.6);
-            /* "Élő" pulzáló animáció */
-            animation: bioPulse 3s infinite ease-in-out;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        
-        /* Fényes felület a folyadékon */
+
+        /* Player (Romer) - Always Red */
+        .liquid.romer {
+            background: radial-gradient(circle at 30% 30%, #ff7675, var(--romer-red));
+        }
+        /* Enemy - Dynamic Color */
+        .liquid.enemy {
+            background: radial-gradient(circle at 30% 30%, #ffffff 10%, var(--enemy-color));
+        }
+
+        /* Highlight reflection for glass look */
         .liquid::after {
-            content: ''; position: absolute; top: 15%; left: 15%; width: 30%; height: 30%;
-            background: linear-gradient(to bottom right, rgba(255,255,255,0.8), transparent);
+            content: ''; position: absolute; top: 15%; left: 15%;
+            width: 25%; height: 25%; background: rgba(255,255,255,0.7);
             border-radius: 50%; filter: blur(1px);
         }
 
-        .liquid.red { background: var(--liquid-red-grad); --glow-color: var(--glow-red); }
-        .liquid.green { background: var(--liquid-green-grad); --glow-color: var(--glow-green); }
+        .liquid.filled { transform: scale(1); }
 
-        /* Betöltő animáció */
-        .anim-drop { animation: fill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        @keyframes fill { 
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* "Élő" pulzálás */
-        @keyframes bioPulse {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.05); filter: brightness(1.1); }
-        }
-
-        /* Győztes vonal - Intenzív ragyogás */
-        .winner .liquid { 
-            animation: winnerFlash 1s infinite alternate;
+        /* Winner Highlight - Static, strong glow */
+        .well.winner {
+            box-shadow: 0 0 0 3px var(--romer-red), 0 0 15px rgba(226, 6, 19, 0.4);
+            background: white;
             z-index: 10;
         }
-        @keyframes winnerFlash {
-            from { box-shadow: 0 0 15px var(--glow-color); }
-            to { box-shadow: 0 0 35px var(--glow-color), 0 0 10px #fff; transform: scale(1.1); }
-        }
 
-        /* --- MODERN MODAL --- */
+        /* --- MODAL --- */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 62, 80, 0.6); /* Sötétebb, modernebb overlay */
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
             display: none; justify-content: center; align-items: center; z-index: 100;
         }
-        .modal-box {
-            background: var(--lab-white);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 90%; max-width: 360px;
+        .modal-content {
+            background: white; padding: 40px; border-radius: 12px; text-align: center;
+            max-width: 400px; width: 90%;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            transform: translateY(20px); opacity: 0; transition: all 0.3s ease;
+            border-top: 6px solid var(--romer-red);
         }
-        .modal.show .modal-box { transform: translateY(0); opacity: 1; }
-
-        .modal-icon { font-size: 4rem; display: block; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .modal-title { margin: 0 0 15px 0; color: var(--romer-gray); font-weight: 800; }
-        .modal-msg { color: #666; line-height: 1.6; margin-bottom: 25px; }
-        .btn-modal { width: 100%; padding: 15px; font-size: 1rem; }
+        .modal-icon { font-size: 3rem; display: block; margin-bottom: 15px; }
+        .modal-title { margin: 0 0 10px 0; color: var(--romer-gray); }
+        .modal-msg { color: #555; line-height: 1.5; margin-bottom: 25px; font-size: 0.95rem; }
+        .modal-link {
+            display: block; margin-top: 15px; color: var(--romer-red); 
+            text-decoration: none; font-weight: bold; font-size: 0.9rem;
+        }
+        .modal-link:hover { text-decoration: underline; }
 
     </style>
 </head>
@@ -256,182 +196,308 @@
 
     <header>
         <h1><span>Romer</span> Labs®</h1>
-        <div class="tagline">Advancing Food Safety Diagnostics</div>
+        <div class="tagline">Making the World's Food Safer</div>
     </header>
 
-    <div class="status-badge" id="status">
-        <div class="status-dot"></div>
-        <span id="status-text">System ready. Initiate analysis (Player).</span>
-    </div>
-
     <div class="controls">
-        <select id="difficulty">
-            <option value="1">Method: Rapid Test (Level 1)</option>
-            <option value="4" selected>Method: ELISA (Level 2)</option>
-            <option value="6">Method: LC-MS/MS (Level 3)</option>
+        <select id="scenario-selector">
+            <option value="mycotoxin">Scenario: Mycotoxins (AgraStrip®)</option>
+            <option value="allergen">Scenario: Allergens (AgraQuant®)</option>
+            <option value="pathogen">Scenario: Pathogens (RapidChek®)</option>
         </select>
-        <button onclick="game.resetGame()">Start New Run</button>
+        <button class="action-btn" onclick="game.resetGame()">Start Analysis</button>
     </div>
 
-    <div class="plate-frame">
-        <script>
-            // Inline script to generate labels based on CSS sizes
-            for(let i=1; i<=7; i++) document.write(`<div class="label label-top" style="left: calc(40px + (${i-1} * (var(--well-size) + var(--gap-size))))">${i}</div>`);
-            const rows = ['A','B','C','D','E','F'];
-            for(let i=0; i<6; i++) document.write(`<div class="label label-left" style="top: calc(40px + (${i} * (var(--well-size) + var(--gap-size))))">${rows[i]}</div>`);
-        </script>
+    <div class="info-panel">
+        <div class="info-icon" id="scenario-icon">🛡️</div>
+        <div class="info-text">
+            <h3 id="scenario-title">Romer Labs Protection</h3>
+            <p id="scenario-desc">Select a scenario to test samples against common food safety threats.</p>
+        </div>
+    </div>
 
-        <div id="board-container" class="game-grid">
-            </div>
+    <div class="plate-container">
+        <div class="grid-labels-top">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+        </div>
+        <div class="grid-labels-left">
+            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
+        </div>
+
+        <div id="board-container" class="game-grid"></div>
     </div>
 
     <div id="result-modal" class="modal">
-        <div class="modal-box">
+        <div class="modal-content">
             <span id="modal-icon" class="modal-icon"></span>
             <h2 id="modal-title" class="modal-title"></h2>
             <p id="modal-msg" class="modal-msg"></p>
-            <button class="btn-modal" onclick="game.resetGame()">Run Next Sample</button>
+            <button class="action-btn" onclick="game.resetGame()">Run Next Sample</button>
+            <a href="#" class="modal-link">View diagnostic solutions</a>
         </div>
     </div>
 
 <script>
-/* GAME LOGIC - Unchanged from previous functional version */
-const ROWS = 6; const COLS = 7;
-const PLAYER = 1; const AI = 2; const EMPTY = 0;
+/**
+ * Romer Labs - Diagnostic Defender
+ * Content-Focused Version
+ */
 
-class PCRGame {
+const ROWS = 6;
+const COLS = 7;
+const PLAYER = 1; 
+const AI = 2;
+const EMPTY = 0;
+
+// Scenario Data (The Brand Message Layer)
+const SCENARIOS = {
+    mycotoxin: {
+        title: "Threat: Aflatoxin",
+        desc: "Aflatoxins are poisonous carcinogens produced by molds. <strong>Solution: AgraStrip® Pro</strong> can detect them on-site in minutes.",
+        enemyName: "Mycotoxin",
+        enemyColor: "#7ab800", // Toxin Green
+        icon: "🌽",
+        winMsg: "Sample Validated! AgraStrip® successfully detected and isolated the contamination before processing.",
+        loseMsg: "Contamination Spread! Aflatoxin levels exceeded safety limits. Ensure testing frequency is increased."
+    },
+    allergen: {
+        title: "Threat: Gluten Trace",
+        desc: "Undeclared allergens trigger recalls. <strong>Solution: AgraQuant® ELISA</strong> provides precise quantification.",
+        enemyName: "Gluten",
+        enemyColor: "#9b59b6", // Allergen Purple
+        icon: "🌾",
+        winMsg: "Safe! AgraQuant® confirmed the product is Gluten-Free within regulatory standards.",
+        loseMsg: "Recall Risk! Gluten traces found in final product. Cross-contamination likely occurred."
+    },
+    pathogen: {
+        title: "Threat: Salmonella",
+        desc: "Pathogens cause severe illness. <strong>Solution: RapidChek®</strong> offers accurate results with simple workflow.",
+        enemyName: "Salmonella",
+        enemyColor: "#e67e22", // Pathogen Orange
+        icon: "🧫",
+        winMsg: "Pathogen Negative. RapidChek® confirms the batch is safe for release.",
+        loseMsg: "Outbreak Warning! Salmonella positive. Production line requires immediate sanitation."
+    }
+};
+
+class Game {
     constructor() {
         this.board = [];
         this.gameActive = true;
-        this.difficulty = 4;
+        this.currentScenario = SCENARIOS.mycotoxin;
         this.uiBoard = document.getElementById('board-container');
-        this.statusText = document.getElementById('status-text');
-        this.statusDot = document.querySelector('.status-dot');
-        this.isProcessing = false;
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        
         this.initBoard();
         this.renderBoard();
-        document.getElementById('difficulty').addEventListener('change', (e) => {
-            this.difficulty = parseInt(e.target.value);
+        
+        // Scenario Change Listener
+        document.getElementById('scenario-selector').addEventListener('change', (e) => {
+            this.currentScenario = SCENARIOS[e.target.value];
+            this.updateScenarioUI();
             this.resetGame();
         });
+
+        // Initial UI Set
+        this.updateScenarioUI();
     }
-    initBoard() { this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY)); }
+
+    initBoard() {
+        this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY));
+    }
+
+    updateScenarioUI() {
+        const s = this.currentScenario;
+        document.getElementById('scenario-title').innerHTML = s.title;
+        document.getElementById('scenario-desc').innerHTML = s.desc;
+        document.getElementById('scenario-icon').innerText = s.icon;
+        document.documentElement.style.setProperty('--enemy-color', s.enemyColor);
+    }
+
     resetGame() {
         this.initBoard();
         this.gameActive = true;
-        this.isProcessing = false;
-        this.updateStatus("System ready. Initiate analysis (Player).", PLAYER);
-        const modal = document.getElementById('result-modal');
-        modal.classList.remove('show');
-        setTimeout(() => modal.style.display = 'none', 300);
-        document.querySelectorAll('.well').forEach(w => { w.innerHTML = ''; w.classList.remove('winner'); });
+        
+        // Hide modal
+        document.getElementById('result-modal').style.display = 'none';
+        
+        // Clear board visually
+        document.querySelectorAll('.well').forEach(w => {
+            w.innerHTML = '';
+            w.classList.remove('winner');
+        });
     }
+
     renderBoard() {
         this.uiBoard.innerHTML = '';
         for (let c = 0; c < COLS; c++) {
-            const colDiv = document.createElement('div'); colDiv.classList.add('column');
-            colDiv.onclick = () => this.handleClick(c);
+            const colDiv = document.createElement('div');
+            colDiv.classList.add('column');
+            colDiv.onclick = () => this.handleMove(c);
+            
             for (let r = ROWS - 1; r >= 0; r--) {
-                const well = document.createElement('div'); well.classList.add('well');
-                well.dataset.row = r; well.dataset.col = c;
+                const well = document.createElement('div');
+                well.classList.add('well');
+                well.dataset.row = r;
+                well.dataset.col = c;
                 colDiv.appendChild(well);
             }
             this.uiBoard.appendChild(colDiv);
         }
     }
-    updateStatus(msg, player) {
-        this.statusText.innerText = msg;
-        this.statusDot.style.background = player === AI ? '#00b894' : 'var(--romer-red)';
-        this.statusDot.style.boxShadow = player === AI ? '0 0 10px #00b894' : '0 0 10px var(--romer-red)';
-    }
-    handleClick(col) {
-        if (!this.gameActive || this.isProcessing) return;
+
+    handleMove(col) {
+        if (!this.gameActive) return;
         if (this.ctx.state === 'suspended') this.ctx.resume();
-        let row = -1;
-        for (let r = 0; r < ROWS; r++) { if (this.board[r][col] === EMPTY) { row = r; break; } }
-        if (row !== -1) { this.processMove(row, col, PLAYER); }
+
+        const row = this.getNextOpenRow(col);
+        if (row !== -1) {
+            this.placePiece(row, col, PLAYER);
+            if (!this.checkGameEnd(PLAYER)) {
+                // AI Turn
+                setTimeout(() => this.makeAIMove(), 500);
+            }
+        }
     }
-    async processMove(row, col, player) {
-        this.isProcessing = true;
+
+    getNextOpenRow(col) {
+        for (let r = 0; r < ROWS; r++) {
+            if (this.board[r][col] === EMPTY) return r;
+        }
+        return -1;
+    }
+
+    placePiece(row, col, player) {
         this.board[row][col] = player;
-        this.addLiquid(row, col, player);
-        this.playSound(player);
-        await new Promise(r => setTimeout(r, 450));
-        if (this.checkWin(player)) { this.endGame(player); }
-        else if (this.checkDraw()) { this.endGame(0); }
-        else {
-            this.isProcessing = false;
-            if (player === PLAYER) {
-                this.updateStatus("Processing sample data... (AI Turn)", AI);
-                setTimeout(() => this.makeAIMove(), 600);
-            } else { this.updateStatus("Await input. (Player Turn)", PLAYER); }
-        }
-    }
-    addLiquid(row, col, player) {
+        
         const well = document.querySelector(`.well[data-row='${row}'][data-col='${col}']`);
-        if (well) {
-            const div = document.createElement('div');
-            div.className = `liquid ${player === PLAYER ? 'red' : 'green'} anim-drop`;
-            well.appendChild(div);
+        const piece = document.createElement('div');
+        piece.classList.add('liquid', player === PLAYER ? 'romer' : 'enemy');
+        well.appendChild(piece);
+        
+        // Force reflow for transition
+        piece.offsetHeight; 
+        piece.classList.add('filled');
+        
+        this.playSound(player === PLAYER ? 600 : 300);
+    }
+
+    makeAIMove() {
+        if (!this.gameActive) return;
+        
+        // Simple AI: 1. Try Win, 2. Block Player, 3. Random
+        const validCols = [];
+        for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) validCols.push(c);
+        
+        if(validCols.length === 0) return;
+
+        let col = validCols[Math.floor(Math.random() * validCols.length)];
+        
+        // Look for immediate win or block
+        const checkMove = (player) => {
+            for (let c of validCols) {
+                const r = this.getNextOpenRow(c);
+                this.board[r][c] = player;
+                if (this.checkWin(player)) { this.board[r][c] = EMPTY; return c; }
+                this.board[r][c] = EMPTY;
+            }
+            return null;
+        };
+
+        const winMove = checkMove(AI);
+        const blockMove = checkMove(PLAYER);
+        
+        if (winMove !== null) col = winMove;
+        else if (blockMove !== null) col = blockMove;
+
+        const row = this.getNextOpenRow(col);
+        this.placePiece(row, col, AI);
+        this.checkGameEnd(AI);
+    }
+
+    checkGameEnd(player) {
+        if (this.checkWin(player)) {
+            this.endGame(player);
+            return true;
         }
-    }
-    playSound(player) {
-        const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
-        const freq = player === PLAYER ? 600 : 400;
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(freq/2, this.ctx.currentTime + 0.15);
-        g.gain.setValueAtTime(0.1, this.ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
-        osc.connect(g); g.connect(this.ctx.destination);
-        osc.start(); osc.stop(this.ctx.currentTime + 0.15);
-    }
-    checkWin(player) {
-        for (let r=0; r<ROWS; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r,c+1, r,c+2, r,c+3)) return true;
-        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS; c++) if (this.allMatch(player, r,c, r+1,c, r+2,c, r+3,c)) return true;
-        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r+1,c+1, r+2,c+2, r+3,c+3)) return true;
-        for (let r=3; r<ROWS; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r-1,c+1, r-2,c+2, r-3,c+3)) return true;
+        if (this.board.every(row => row.every(cell => cell !== EMPTY))) {
+            this.endGame(0);
+            return true;
+        }
         return false;
     }
-    allMatch(p, r1,c1, r2,c2, r3,c3, r4,c4) {
-        const b = this.board;
-        if (b[r1][c1]===p && b[r2][c2]===p && b[r3][c3]===p && b[r4][c4]===p) {
-            [[r1,c1],[r2,c2],[r3,c3],[r4,c4]].forEach(([r,c]) => document.querySelector(`.well[data-row='${r}'][data-col='${c}']`).classList.add('winner'));
-            return true;
-        } return false;
+
+    checkWin(player) {
+        // Horizontal, Vertical, Diagonal Logic
+        const checkLine = (a,b,c,d) => (a===player && b===player && c===player && d===player);
+        
+        for (let r=0; r<ROWS; r++) {
+            for (let c=0; c<COLS; c++) {
+                if (c+3 < COLS && checkLine(this.board[r][c], this.board[r][c+1], this.board[r][c+2], this.board[r][c+3])) {
+                    this.highlightWin([[r,c],[r,c+1],[r,c+2],[r,c+3]]); return true;
+                }
+                if (r+3 < ROWS) {
+                    if (checkLine(this.board[r][c], this.board[r+1][c], this.board[r+2][c], this.board[r+3][c])) {
+                        this.highlightWin([[r,c],[r+1,c],[r+2,c],[r+3,c]]); return true;
+                    }
+                    if (c+3 < COLS && checkLine(this.board[r][c], this.board[r+1][c+1], this.board[r+2][c+2], this.board[r+3][c+3])) {
+                        this.highlightWin([[r,c],[r+1,c+1],[r+2,c+2],[r+3,c+3]]); return true;
+                    }
+                    if (c-3 >= 0 && checkLine(this.board[r][c], this.board[r+1][c-1], this.board[r+2][c-2], this.board[r+3][c-3])) {
+                        this.highlightWin([[r,c],[r+1,c-1],[r+2,c-2],[r+3,c-3]]); return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
-    checkDraw() { return this.board.every(row => row.every(cell => cell !== EMPTY)); }
+
+    highlightWin(coords) {
+        coords.forEach(([r,c]) => {
+            document.querySelector(`.well[data-row='${r}'][data-col='${c}']`).classList.add('winner');
+        });
+    }
+
     endGame(winner) {
         this.gameActive = false;
         const modal = document.getElementById('result-modal');
-        const title = document.getElementById('modal-title'); const msg = document.getElementById('modal-msg'); const icon = document.getElementById('modal-icon');
+        const title = document.getElementById('modal-title');
+        const msg = document.getElementById('modal-msg');
+        const icon = document.getElementById('modal-icon');
+        const s = this.currentScenario;
+
         setTimeout(() => {
-            modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
+            modal.style.display = 'flex';
             if (winner === PLAYER) {
-                icon.innerText = "🛡️"; title.innerText = "SAMPLE VALIDATED"; title.style.color = "var(--romer-red)";
-                msg.innerText = "Target analytes successfully identified within safe limits using Romer Labs protocol.";
+                icon.innerText = "🛡️";
+                title.innerText = "TEST PASSED";
+                title.style.color = "var(--romer-red)";
+                msg.innerHTML = s.winMsg;
             } else if (winner === AI) {
-                icon.innerText = "☣️"; title.innerText = "CONTAMINATION DETECTED"; title.style.color = "#00b894";
-                msg.innerText = "Contaminant load exceeds threshold. Immediate corrective action required.";
+                icon.innerText = "⚠️";
+                title.innerText = "TEST FAILED";
+                title.style.color = s.enemyColor;
+                msg.innerHTML = s.loseMsg;
             } else {
-                icon.innerText = "⚠️"; title.innerText = "RESULT INCONCLUSIVE"; title.style.color = "#555";
-                msg.innerText = "Assay parameters ambiguous. Re-calibration and re-testing recommended.";
+                icon.innerText = "⚖️";
+                title.innerText = "INCONCLUSIVE";
+                msg.innerHTML = "Result unclear. Please re-run the assay.";
             }
         }, 800);
     }
-    makeAIMove() {
-        const valid = []; for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) valid.push(c);
-        let col = valid[Math.floor(Math.random() * valid.length)];
-        for(let c of valid) {
-            let r = -1; for(let i=0;i<ROWS;i++) if(this.board[i][c]===EMPTY) { r=i; break; }
-            this.board[r][c] = AI; if(this.checkWin(AI)) { col = c; this.board[r][c]=EMPTY; break; } this.board[r][c] = EMPTY;
-            this.board[r][c] = PLAYER; if(this.checkWin(PLAYER)) { col = c; this.board[r][c]=EMPTY; break; } this.board[r][c] = EMPTY;
-        }
-        let r = -1; for (let i = 0; i < ROWS; i++) { if (this.board[i][col] === EMPTY) { r = i; break; } }
-        this.processMove(r, col, AI);
+
+    playSound(freq) {
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        g.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+        osc.connect(g); g.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.1);
     }
 }
-const game = new PCRGame();
+
+const game = new Game();
 </script>
 </body>
 </html>
