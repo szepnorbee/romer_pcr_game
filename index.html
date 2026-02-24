@@ -3,406 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Romer Labs - Safety Gatekeeper</title>
+    <title>Romer Labs - QC Analytical Terminal</title>
     <style>
         :root {
+            /* Professional Palette */
             --romer-red: #E20613;
-            --romer-gray: #333;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --accept-green: #2ecc71;
-            --reject-red: #e74c3c;
+            --tech-dark: #2c3e50; /* Deep technical blue/gray */
+            --tech-light: #ecf0f1;
+            --sensor-green: #00b894; /* Tech teal, not cartoon green */
+            --alert-orange: #e67e22;
+            
+            /* Surfaces */
+            --bg-color: #f8f9fa;
+            --device-body: #dce1e6;
+            --panel-bg: #ffffff;
+            
+            --font-stack: "Roboto", "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "Roboto Mono", "Consolas", monospace;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-stack);
             background-color: var(--bg-color);
-            color: var(--romer-gray);
+            color: var(--tech-dark);
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            user-select: none;
+            box-sizing: border-box;
+             /* Subtle technical grid pattern */
+            background-image: 
+                linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER (Corporate & Clean) --- */
         header {
-            background: white;
             width: 100%;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            border-bottom: 4px solid var(--romer-red);
-        }
-        h1 { margin: 0; font-size: 1.5rem; color: #555; }
-        h1 span { color: var(--romer-red); font-weight: 800; }
-
-        /* --- DASHBOARD (Score & Lives) --- */
-        .dashboard {
+            max-width: 800px;
             display: flex;
             justify-content: space-between;
-            width: 90%;
-            max-width: 500px;
-            margin: 20px 0;
-            padding: 15px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            font-weight: bold;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
         }
-        .score-box { color: var(--romer-gray); }
-        .lives-box { color: var(--romer-red); }
+        .brand { display: flex; flex-direction: column; }
+        h1 { margin: 0; font-size: 1.4rem; color: var(--tech-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+        h1 span { color: var(--romer-red); font-weight: 900; }
+        .sub-brand { font-size: 0.8rem; color: #7f8c8d; font-weight: 500; }
+        
+        .system-status {
+            font-size: 0.8rem;
+            color: var(--sensor-green);
+            display: flex; align-items: center; gap: 5px;
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--sensor-green); border-radius: 50%; box-shadow: 0 0 5px var(--sensor-green); }
 
-        /* --- GAME AREA --- */
-        .game-container {
-            position: relative;
-            width: 90%;
-            max-width: 500px;
-            height: 400px;
-            background: #e0e0e0; /* Conveyor belt color */
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+
+        /* --- MAIN INTERFACE CONTAINER (The "Machine") --- */
+        .analyzer-unit {
+            background: var(--device-body);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 8px;
+            /* Technical beveled look */
+            box-shadow: 
+                0 10px 25px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.6),
+                inset 0 -1px 1px rgba(0,0,0,0.1);
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Moving Pattern for Conveyor Belt */
-        .conveyor-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: repeating-linear-gradient(45deg, #ddd 0, #ddd 10px, #e0e0e0 10px, #e0e0e0 20px);
-            opacity: 0.5;
-            animation: slide 2s linear infinite;
-        }
-        @keyframes slide { from { background-position: 0 0; } to { background-position: 40px 0; } }
-
-        /* --- THE SAMPLE (Corn/Wheat) --- */
-        .sample-item {
-            position: relative;
-            z-index: 2;
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            transition: transform 0.3s;
-        }
-        
-        /* --- THE TEST DEVICE (Overlay) --- */
-        .test-device {
-            position: absolute;
-            z-index: 3;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 60px;
-            height: 180px;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: none; /* Hidden initially */
-            flex-direction: column;
-            padding: 10px;
-            align-items: center;
-        }
-        
-        /* AgraStrip Branding Look */
-        .device-cap { width: 100%; height: 20px; background: var(--romer-red); border-radius: 2px 2px 0 0; margin-bottom: 20px;}
-        .result-window {
-            width: 20px;
-            height: 80px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            position: relative;
-            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
-        }
-
-        /* CONTROL LINE (Always visible) */
-        .line-c {
-            position: absolute; top: 15px; left: 2px; right: 2px; height: 4px;
-            background: #d63031; /* Red line */
-            border-radius: 2px;
-            opacity: 0.8;
-        }
-        
-        /* TEST LINE (Variable Intensity) */
-        .line-t {
-            position: absolute; top: 45px; left: 2px; right: 2px; height: 4px;
-            background: #d63031; /* Red line */
-            border-radius: 2px;
-            opacity: 0; /* Dynamic */
-            transition: opacity 1s ease-in-out;
-        }
-        
-        .label-c { position: absolute; top: 12px; left: -15px; font-size: 10px; font-weight: bold; color: #999; }
-        .label-t { position: absolute; top: 42px; left: -15px; font-size: 10px; font-weight: bold; color: #999; }
-
-        /* --- ACTION BUTTONS --- */
-        .actions {
-            margin-top: 20px;
-            display: flex;
             gap: 20px;
-            width: 90%;
-            max-width: 500px;
+            position: relative;
+        }
+
+        /* --- DATA PANELS (Dashboard) --- */
+        .data-panel {
+            display: flex;
+            gap: 15px;
+        }
+        .readout {
+            flex: 1;
+            background: #222f3e; /* Dark screen look */
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #4b6584;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .readout-label { color: #7f8c8d; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
+        .readout-value { color: var(--sensor-green); font-family: var(--font-mono); font-size: 1.2rem; font-weight: bold; letter-spacing: 1px;}
+        .readout-value.alert { color: var(--romer-red); }
+
+        /* --- ANALYSIS CHAMBER (Game Area) --- */
+        .analysis-chamber {
+            position: relative;
+            height: 280px;
+            background: #fdfdfd;
+            border-radius: 4px;
+            /* "Recessed" look */
+            border: 3px solid #bdc3c7;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Glass overlay effect */
+        .analysis-chamber::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+            pointer-events: none; z-index: 10;
+        }
+        
+        /* Technical grid overlay */
+        .chamber-grid {
+             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+             background-image: 
+                 linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                 linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+             background-size: 40px 40px;
+             z-index: 1;
+        }
+
+        /* --- SAMPLE VISUALIZATION (Technical, not cartoon) --- */
+        .sample-container {
+            position: relative; z-index: 2;
+            width: 140px; height: 140px;
+            /* Placeholder for a petri dish / sample cup */
+            background: #fff;
+            border: 2px solid #dce1e6;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sample-id { font-family: var(--font-mono); font-size: 0.7rem; color: #999; margin-bottom: 5px;}
+        .sample-icon { font-size: 2.5rem; opacity: 0.8; filter: grayscale(30%); } /* Less saturated icons */
+
+        /* --- LFD TEST DEVICE (Realistic) --- */
+        .lfd-device {
+            position: absolute; z-index: 5;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 200px;
+            /* Plastic cassette look */
+            background: linear-gradient(to right, #fdfdfd, #f0f0f0);
+            border-radius: 6px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.8);
+            border: 1px solid #d0d0d0;
+            display: none; /* Hidden initially */
+            flex-direction: column; align-items: center;
+            padding: 15px 0;
+        }
+        
+        .brand-area { color: var(--romer-red); font-weight: bold; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 15px; }
+        
+        /* Recessed window for the membrane */
+        .result-window {
+            width: 24px; height: 100px;
+            background: #fff; /* Nitrocellulose membrane color */
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            box-shadow: inset 1px 2px 5px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        /* Reagent Lines (Realistic Blur) */
+        .reagent-line {
+            position: absolute; left: 2px; right: 2px; height: 4px;
+            background: #c0392b; /* Deep crimson reagent color */
+            border-radius: 2px;
+            filter: blur(0.8px); /* Realistic fuzziness */
+        }
+        .line-c { top: 20px; opacity: 0.85; } /* Control always shows */
+        .line-t { top: 60px; opacity: 0; transition: opacity 0.8s ease-in-out; } /* Test is dynamic */
+        
+        .line-label { position: absolute; left: -18px; font-size: 9px; font-weight: bold; color: #7f8c8d; font-family: sans-serif; }
+
+        /* --- CONTROLS SECTION --- */
+        .control-panel {
+            display: flex; gap: 15px;
+            border-top: 2px solid #d0d0d0;
+            padding-top: 20px;
         }
 
         .btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            color: white;
-            transition: transform 0.1s, filter 0.2s;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            flex: 1; padding: 16px;
+            border: none; border-radius: 4px;
+            font-family: var(--font-stack); font-size: 0.9rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+            transition: all 0.1s;
+            /* Technical button look */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            position: relative; overflow: hidden;
         }
-        .btn:active { transform: translateY(4px); box-shadow: none; }
+        .btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        /* Subtle metallic gradient overlay */
+        .btn::after { content:''; position:absolute; top:0; left:0; width:100%; height:50%; background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent); pointer-events:none;}
 
-        .btn-reject { background-color: var(--reject-red); }
-        .btn-accept { background-color: var(--accept-green); }
-        .btn-test { background-color: #3498db; width: 100%; }
+        .btn-reject { background-color: var(--romer-red); color: white; }
+        .btn-accept { background-color: var(--sensor-green); color: white; }
+        .btn-test { background-color: #34495e; color: white; width: 100%;}
+        .btn-test:hover { background-color: #2c3e50; }
 
-        /* --- OVERLAYS --- */
-        .message-overlay {
+        /* --- OVERLAYS (Professional Dialogs) --- */
+        .overlay-backdrop {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
+            background: rgba(44, 62, 80, 0.8); /* Darker, professional matte */
+            backdrop-filter: blur(3px);
+            z-index: 20;
+            display: flex; justify-content: center; align-items: center;
             display: none;
         }
-        .message-icon { font-size: 4rem; margin-bottom: 10px; }
-        .message-text { font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; color: var(--romer-gray); }
-        .btn-start { background: var(--romer-red); color: white; padding: 12px 30px; border-radius: 25px; border:none; font-size:1rem; cursor: pointer; font-weight: bold;}
-
-        /* Animációk */
-        .slide-in { animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes slideIn { from { transform: translateX(100%) scale(0.5); opacity:0; } to { transform: translateX(0) scale(1); opacity:1; } }
+        .dialog-box {
+            background: var(--panel-bg);
+            width: 90%; max-width: 400px;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            border-top: 4px solid var(--romer-red);
+        }
+        .dialog-title { font-size: 1.2rem; font-weight: 700; color: var(--tech-dark); margin: 0 0 15px 0; }
+        .dialog-body { font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 25px; }
         
-        .slide-out-left { animation: slideOutLeft 0.5s forwards; }
-        @keyframes slideOutLeft { to { transform: translateX(-200%) rotate(-20deg); opacity: 0; } }
+        /* Utility Classes */
+        .hidden { display: none !important; }
         
-        .slide-out-right { animation: slideOutRight 0.5s forwards; }
-        @keyframes slideOutRight { to { transform: translateX(200%) rotate(20deg); opacity: 0; } }
-
+        /* Animations for sample movement */
+        .slide-in { animation: slideIn 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000); }
+        @keyframes slideIn { from { transform: translateX(150px); opacity:0; } to { transform: translateX(0); opacity:1; } }
+        
+        .process-out { animation: processOut 0.4s ease-in forwards; }
+        @keyframes processOut { to { transform: scale(0.8) translateY(-20px); opacity: 0; } }
+        
     </style>
 </head>
 <body>
 
     <header>
-        <h1><span>Romer</span> Labs®</h1>
-        <div style="font-size: 0.8rem; color: #888;">Diagnostic QC Simulator</div>
+        <div class="brand">
+            <h1><span>Romer</span> Labs®</h1>
+            <div class="sub-brand">QC Analytical Terminal v2.1</div>
+        </div>
+        <div class="system-status">
+            <div class="status-dot"></div> System Online
+        </div>
     </header>
 
-    <div class="dashboard">
-        <div class="score-box">BATCH: <span id="score">0</span></div>
-        <div class="lives-box">MISSED: <span id="lives">0</span>/3</div>
-    </div>
-
-    <div class="game-container">
-        <div class="conveyor-bg"></div>
+    <div class="analyzer-unit">
         
-        <div id="sample" class="sample-item">🌽</div>
-        
-        <div id="test-strip" class="test-device">
-            <div class="device-cap"></div>
-            <div class="result-window">
-                <span class="label-c">C</span>
-                <div class="line-c"></div>
-                
-                <span class="label-t">T</span>
-                <div id="line-t" class="line-t"></div>
+        <div class="data-panel">
+            <div class="readout">
+                <span class="readout-label">Samples Processed</span>
+                <span class="readout-value" id="score">0000</span>
             </div>
-            <div style="margin-top:10px; font-size: 0.7rem; font-weight:bold; color:#ccc;">AgraStrip®</div>
+            <div class="readout">
+                <span class="readout-label">Critical Errors</span>
+                <span class="readout-value alert"><span id="lives">0</span>/3</span>
+            </div>
         </div>
 
-        <div id="start-screen" class="message-overlay" style="display:flex;">
-            <div class="message-icon">🛡️</div>
-            <div class="message-text">
-                Be the Quality Manager.<br>
-                Test samples. Check the line intensity.<br>
-                <span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:10px; color:#555;">
-                    Strong Line = TOXIC (Reject)<br>
-                    No/Faint Line = SAFE (Accept)
-                </span>
+        <div class="analysis-chamber">
+            <div class="chamber-grid"></div>
+            
+            <div id="sample" class="sample-container hidden">
+                <span class="sample-id">ID: #<span id="sample-id-num"></span></span>
+                <span class="sample-icon" id="sample-icon"></span>
             </div>
-            <button class="btn-start" onclick="game.start()">START SHIFT</button>
-        </div>
+            
+            <div id="test-device" class="lfd-device">
+                <div class="brand-area">AgraStrip®</div>
+                <div class="result-window">
+                    <span class="line-label" style="top: 17px;">C</span>
+                    <div class="reagent-line line-c"></div>
+                    
+                    <span class="line-label" style="top: 57px;">T</span>
+                    <div id="line-t" class="reagent-line line-t"></div>
+                </div>
+            </div>
 
-        <div id="game-over-screen" class="message-overlay">
-            <div class="message-icon">🛑</div>
-            <div class="message-text" id="end-msg">Production Halted!</div>
-            <button class="btn-start" onclick="game.start()">TRY AGAIN</button>
+            <div id="start-overlay" class="overlay-backdrop" style="display:flex;">
+                <div class="dialog-box">
+                    <h2 class="dialog-title">Initiate QC Sequence</h2>
+                    <div class="dialog-body">
+                        Analyze incoming samples. Interpret the LFD result window based on cut-off levels.<br><br>
+                        <strong>Visible T-Line = POSITIVE (Reject)</strong><br>
+                        No T-Line = NEGATIVE (Accept)
+                    </div>
+                    <button class="btn btn-test" onclick="game.start()">BEGIN SESSION</button>
+                </div>
+            </div>
+            
+             <div id="end-overlay" class="overlay-backdrop">
+                <div class="dialog-box" style="border-top-color: var(--alert-orange);">
+                    <h2 class="dialog-title">Session Terminated</h2>
+                    <div class="dialog-body" id="end-msg">
+                        Maximum error threshold reached. Audit report generated.
+                    </div>
+                    <button class="btn btn-test" onclick="game.start()">RESTART SYSTEM</button>
+                </div>
+            </div>
+
+        </div> <div class="control-panel">
+            <button id="btn-initiate" class="btn btn-test" onclick="game.runAnalysis()">INITIATE ANALYSIS</button>
+            <div id="decision-btns" class="hidden" style="display:flex; gap:15px; width:100%;">
+                <button class="btn btn-reject" onclick="game.decide('reject')">REJECT (OUT OF SPEC)</button>
+                <button class="btn btn-accept" onclick="game.decide('accept')">ACCEPT (WITHIN SPEC)</button>
+            </div>
         </div>
     </div>
 
-    <div class="actions">
-        <button id="btn-test" class="btn btn-test" onclick="game.runTest()">RUN TEST (AgraStrip)</button>
-        <div id="decision-btns" style="display:none; width:100%; gap:20px;">
-            <button class="btn btn-reject" onclick="game.decide('reject')">REJECT 🚫</button>
-            <button class="btn btn-accept" onclick="game.decide('accept')">ACCEPT ✅</button>
-        </div>
-    </div>
 
 <script>
 /**
- * Romer Labs - Quality Control Game
- * Focus: Visual intensity interpretation (Simulation of LFD/ELISA)
+ * Romer Labs - QC Analytical Terminal
+ * Professional Edition
  */
 
-class QCGame {
+class QCSystem {
     constructor() {
-        this.score = 0;
-        this.mistakes = 0;
-        this.maxMistakes = 3;
-        this.currentToxicity = 0; // 0.0 to 1.0
-        this.threshold = 0.4; // Above this, it's toxic
+        this.processedCount = 0;
+        this.errors = 0;
+        this.maxErrors = 3;
+        this.currentToxicity = 0;
+        // Cut-off threshold: above 0.4 toxicity means the line becomes visible
+        this.threshold = 0.4; 
+        this.isBusy = false;
         
-        // DOM Elements
-        this.sampleEl = document.getElementById('sample');
-        this.stripEl = document.getElementById('test-strip');
-        this.lineTEl = document.getElementById('line-t');
-        this.btnTest = document.getElementById('btn-test');
-        this.decisionBtns = document.getElementById('decision-btns');
-        this.scoreEl = document.getElementById('score');
-        this.livesEl = document.getElementById('lives');
-        this.startScreen = document.getElementById('start-screen');
-        this.endScreen = document.getElementById('game-over-screen');
+        // DOM References
+        this.els = {
+            sample: document.getElementById('sample'),
+            sampleIcon: document.getElementById('sample-icon'),
+            sampleId: document.getElementById('sample-id-num'),
+            device: document.getElementById('test-device'),
+            lineT: document.getElementById('line-t'),
+            btnInitiate: document.getElementById('btn-initiate'),
+            decisionBtns: document.getElementById('decision-btns'),
+            scoreDisplay: document.getElementById('score'),
+            livesDisplay: document.getElementById('lives'),
+            startOverlay: document.getElementById('start-overlay'),
+            endOverlay: document.getElementById('end-overlay'),
+            endMsg: document.getElementById('end-msg')
+        };
         
-        // Products
-        this.icons = ['🌽', '🌾', '🥜', '🥜', '🌽'];
+        // Sample Types (Technical icons)
+        this.sampleTypes = [
+            { icon: '🌽', type: 'Corn (Maize)' },
+            { icon: '🌾', type: 'Wheat Grain' },
+            { icon: '🥜', type: 'Peanut Raw' },
+            { icon: '🥣', type: 'Feed Mix' }
+        ];
     }
 
     start() {
-        this.score = 0;
-        this.mistakes = 0;
-        this.updateUI();
-        this.startScreen.style.display = 'none';
-        this.endScreen.style.display = 'none';
-        this.nextSample();
+        this.processedCount = 0;
+        this.errors = 0;
+        this.updateDashboard();
+        this.els.startOverlay.style.display = 'none';
+        this.els.endOverlay.style.display = 'none';
+        this.loadNextSample();
     }
 
-    nextSample() {
-        // Reset state
-        this.sampleEl.className = 'sample-item slide-in';
-        this.sampleEl.innerText = this.icons[Math.floor(Math.random() * this.icons.length)];
-        this.sampleEl.style.display = 'flex';
-        
-        this.stripEl.style.display = 'none';
-        this.btnTest.style.display = 'block';
-        this.decisionBtns.style.display = 'none';
-        this.lineTEl.style.opacity = 0; // Reset line
+    updateDashboard() {
+        // Pad with zeros for technical look (e.g., 0012)
+        this.els.scoreDisplay.innerText = this.processedCount.toString().padStart(4, '0');
+        this.els.livesDisplay.innerText = this.errors;
+    }
 
-        // Generate random toxicity
-        // 50% chance of being safe, 50% chance of varying toxicity
-        if (Math.random() > 0.5) {
-            this.currentToxicity = Math.random() * 0.3; // Safe (0.0 - 0.3)
+    loadNextSample() {
+        this.isBusy = false;
+        this.els.device.style.display = 'none';
+        this.els.btnInitiate.style.display = 'block';
+        this.els.decisionBtns.classList.add('hidden');
+        this.els.lineT.style.opacity = 0; // Reset line
+
+        // Generate random sample data
+        const sampleData = this.sampleTypes[Math.floor(Math.random() * this.sampleTypes.length)];
+        this.els.sampleIcon.innerText = sampleData.icon;
+        // Generate fake 4-digit ID
+        this.els.sampleId.innerText = Math.floor(1000 + Math.random() * 9000);
+        
+        // Show sample in chamber
+        this.els.sample.classList.remove('process-out');
+        this.els.sample.classList.add('slide-in');
+        this.els.sample.classList.remove('hidden');
+
+        // Determine Toxicity Level (Simulated analyte concentration)
+        // 60% chance of being compliant (safe), 40% non-compliant
+        if (Math.random() > 0.4) {
+            // Safe range: 0.0 - 0.39
+            this.currentToxicity = Math.random() * (this.threshold - 0.01);
         } else {
-            this.currentToxicity = 0.5 + (Math.random() * 0.5); // Toxic (0.5 - 1.0)
+            // Toxic range: 0.41 - 1.0 (Strong positives prioritized for demo)
+            this.currentToxicity = this.threshold + 0.01 + (Math.random() * 0.6);
         }
+        // console.log(`Sample Loaded. Toxicity: ${this.currentToxicity.toFixed(2)} (Threshold: ${this.threshold})`);
     }
 
-    runTest() {
-        this.btnTest.style.display = 'none';
+    runAnalysis() {
+        if(this.isBusy) return;
+        this.isBusy = true;
+        this.els.btnInitiate.style.display = 'none';
         
-        // Show strip
-        this.stripEl.style.display = 'flex';
-        this.stripEl.classList.add('slide-in');
+        // Hide sample, show device
+        this.els.sample.classList.add('hidden');
+        this.els.device.style.display = 'flex';
 
-        // Simulate Development Time (Fast for game)
+        // Simulate LFD development time (e.g., 5 mins compressed to 1 sec)
         setTimeout(() => {
-            // Visualize result based on toxicity
-            // Logic: Competitive LFD (Line disappears if toxic) or Sandwich (Line appears)?
-            // Let's stick to simple intuitive logic for non-scientists:
-            // DARKER LINE = MORE TOXIC (Sandwich assay logic, e.g. Pathogens)
-            // OR stick to Romer's AgraStrip Mycotoxin (often cut-off).
-            // Let's use: VISIBLE LINE = POSITIVE (Contaminated) for intuition.
-            
-            let opacity = 0;
-            if (this.currentToxicity > this.threshold) {
-                // It is toxic. Show line intensity based on how toxic it is.
-                // Map 0.4-1.0 to 0.3-1.0 opacity
-                opacity = 0.3 + (this.currentToxicity * 0.7); 
-            } else {
-                // Safe. Very faint ghost line or 0
-                opacity = Math.random() * 0.1; 
-            }
-            
-            this.lineTEl.style.opacity = opacity;
-            
-            // Allow decision
-            this.decisionBtns.style.display = 'flex';
-        }, 600);
+            this.developResult();
+        }, 1000);
+    }
+
+    developResult() {
+        // Calculate line intensity based on toxicity
+        let intensity = 0;
+        
+        if (this.currentToxicity > this.threshold) {
+            // Positive result. Map toxicity range [threshold...1.0] to opacity [0.2...1.0]
+            // A result just above threshold shows a faint line (0.2).
+            // A highly toxic result shows a strong line (1.0).
+            const range = 1.0 - this.threshold;
+            const position = this.currentToxicity - this.threshold;
+            intensity = 0.2 + ((position / range) * 0.8);
+             // Cap at 1.0
+            if (intensity > 1.0) intensity = 1.0;
+        } else {
+            // Negative result. Extremely faint ghost line or pure zero.
+            intensity = Math.random() < 0.8 ? 0 : 0.05;
+        }
+        
+        this.els.lineT.style.opacity = intensity.toFixed(2);
+        
+        // Enable decision phase
+        this.els.decisionBtns.classList.remove('hidden');
+        this.isBusy = false;
     }
 
     decide(action) {
-        const isToxic = this.currentToxicity > this.threshold;
-        let correct = false;
-
-        if (action === 'reject' && isToxic) correct = true; // Correctly rejected bad sample
-        if (action === 'accept' && !isToxic) correct = true; // Correctly accepted good sample
-
-        // Animation out
-        this.sampleEl.classList.remove('slide-in');
-        if (action === 'reject') {
-            this.sampleEl.classList.add('slide-out-left'); // Toss to trash
-        } else {
-            this.sampleEl.classList.add('slide-out-right'); // Send to production
-        }
+        if(this.isBusy) return;
+        this.isBusy = true;
         
-        this.stripEl.style.display = 'none';
+        const isPositive = this.currentToxicity > this.threshold;
+        let isCorrectDecision = false;
 
-        if (correct) {
-            this.score++;
-            this.showFeedback("Correct!", "green");
-            setTimeout(() => this.nextSample(), 800);
+        // Decision Logic:
+        // Positive Sample (Toxic) MUST be Rejected.
+        // Negative Sample (Safe) MUST be Accepted.
+        if (action === 'reject' && isPositive) isCorrectDecision = true;
+        if (action === 'accept' && !isPositive) isCorrectDecision = true;
+
+        // Visual Feedback & State Update
+        this.els.decisionBtns.classList.add('hidden');
+        this.els.device.style.display = 'none';
+        // Show sample briefly processing out
+        this.els.sample.classList.remove('hidden', 'slide-in');
+        this.els.sample.classList.add('process-out');
+
+        if (isCorrectDecision) {
+            this.processedCount++;
+            // Brief delay before next sample
+            setTimeout(() => this.loadNextSample(), 800);
         } else {
-            this.mistakes++;
-            let msg = isToxic ? "⚠️ Danger! Toxic sample accepted!" : "💸 Waste! Safe sample rejected.";
-            this.showFeedback(msg, "red");
+            this.errors++;
+            // TODO: Add professional error toast/alert here if desired.
+            // For now, just update dashboard.
             
-            if (this.mistakes >= this.maxMistakes) {
-                setTimeout(() => this.gameOver(), 800);
+            if (this.errors >= this.maxErrors) {
+                setTimeout(() => this.terminateSession(), 800);
             } else {
-                setTimeout(() => this.nextSample(), 1000);
+                setTimeout(() => this.loadNextSample(), 1000);
             }
         }
-        this.updateUI();
+        this.updateDashboard();
     }
 
-    showFeedback(text, color) {
-        // Quick toast could go here, for now just logic
-        // We could briefly change background color
-        document.body.style.backgroundColor = color === "red" ? "#ffebee" : "#e8f5e9";
-        setTimeout(() => document.body.style.backgroundColor = "#f4f7f6", 300);
-    }
-
-    updateUI() {
-        this.scoreEl.innerText = this.score;
-        this.livesEl.innerText = this.mistakes;
-    }
-
-    gameOver() {
-        document.getElementById('end-msg').innerHTML = `Shift Ended.<br>Batches Validated: ${this.score}`;
-        this.endScreen.style.display = 'flex';
+    terminateSession() {
+        this.els.endMsg.innerHTML = `Audit complete.<br><br>Total Samples Processed: <strong>${this.processedCount}</strong><br>Critical Accuracy Failures: <strong>${this.errors}</strong>`;
+        this.els.endOverlay.style.display = 'flex';
     }
 }
 
-const game = new QCGame();
+// Initialize System
+const qcSystem = new QCSystem();
 
 </script>
 </body>
