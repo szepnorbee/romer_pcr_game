@@ -3,231 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Romer Labs - PCR Challenge</title>
+    <title>Romer Labs - PCR Challenge 2.0</title>
     <style>
-        /* --- RESET & BASICS --- */
-        * { box-sizing: border-box; } /* Ez kritikus a méretezéshez! */
+        /* --- MODERN RESET & VARIABLES --- */
+        * { box-sizing: border-box; }
         
         :root {
-            /* BRANDING */
-            --romer-red: #E20613; 
-            --romer-gray: #575756;
-            --bg-color: #f0f2f5;
+            /* BRAND COLORS */
+            --romer-red: #E20613;
+            --romer-red-dark: #b0000a;
+            --romer-gray: #2c3e50;
+            --lab-white: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+            /* GAME ASSETS - MODERNIZED */
+            /* Élénkebb, "bio-lumineszcens" gradiensek */
+            --liquid-red-grad: linear-gradient(135deg, #ff7675, var(--romer-red));
+            --liquid-green-grad: linear-gradient(135deg, #55efc4, #00b894);
+            --glow-red: rgba(226, 6, 19, 0.5);
+            --glow-green: rgba(0, 184, 148, 0.5);
             
-            /* GAME ASSETS */
-            --liquid-red: radial-gradient(circle at 35% 35%, #ff8a90, #E20613); 
-            --liquid-green: radial-gradient(circle at 35% 35%, #b8e986, #7ab800);
-            
-            /* MÉRETEZÉS - EZ A LÉNYEG */
-            /* Mobilon: a képernyő szélességének 11%-a egy lyuk (7x11=77%, marad hely a széleknek) */
+            /* SIZING (VW alapú a reszponzivitásért) */
             --well-size: 11.5vw; 
             --gap-size: 1.5vw;
         }
 
-        /* Desktopon (ha a képernyő szélesebb, mint 500px) fix méretre váltunk */
-        @media (min-width: 500px) {
+        /* Desktop fix méretek */
+        @media (min-width: 550px) {
             :root {
-                --well-size: 50px;
-                --gap-size: 8px;
+                --well-size: 54px;
+                --gap-size: 10px;
             }
         }
 
         body {
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
             color: var(--romer-gray);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 10px;
-            /* Rács háttér */
-            background-image: radial-gradient(#ccc 1px, transparent 1px);
-            background-size: 20px 20px;
+            padding: 20px;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- UI ELEMENTS --- */
+        /* --- MODERN HEADER --- */
         header {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            border-top: 5px solid var(--romer-red);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+            background: var(--lab-white);
+            padding: 15px 25px;
+            border-radius: 12px;
+            /* Finomabb, modernebb árnyék */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
             text-align: center;
-            max-width: 90%;
+            position: relative;
+            overflow: hidden;
         }
-        h1 { margin: 0; font-size: 1.4rem; color: var(--romer-gray); text-transform: uppercase; }
-        h1 span { color: var(--romer-red); font-weight: 900; }
-        .tagline { font-size: 0.8rem; color: #888; margin-top: 5px; }
+        /* Kicsi Romer piros akcentus csík alul */
+        header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
+            background: var(--romer-red);
+        }
 
+        h1 { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+        h1 span { color: var(--romer-red); }
+        .tagline { font-size: 0.85rem; color: #666; margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
+
+        /* --- UI CONTROLS --- */
         .status-badge {
-            background: #e8f4f8;
-            color: #0077cc;
-            border-left: 5px solid #0077cc;
-            padding: 10px 15px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--romer-gray);
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
             text-align: center;
-            max-width: 400px;
-            width: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 10px;
         }
+        .status-dot {
+            width: 10px; height: 10px; background: var(--romer-red); border-radius: 50%;
+            box-shadow: 0 0 10px var(--romer-red); animation: pulseDot 1.5s infinite;
+        }
+        @keyframes pulseDot { 50% { opacity: 0.5; transform: scale(0.8); } }
 
         .controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; justify-content: center;
         }
+
+        /* Modern gombok és selectek */
+        select, button {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        select {
+            background: var(--lab-white);
+            color: var(--romer-gray);
+            border: 2px solid transparent;
+        }
+        select:hover { border-color: #e0e0e0; }
+        select:focus { outline: none; border-color: var(--romer-red); }
 
         button {
-            background: var(--romer-red);
+            background: linear-gradient(135deg, var(--romer-red), var(--romer-red-dark));
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
             text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(226, 6, 19, 0.3);
+            letter-spacing: 1px;
         }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(226, 6, 19, 0.3); }
+        button:active { transform: translateY(0); }
         
-        select {
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            background: white;
-        }
-
-        /* --- A TÁBLA (The Board) --- */
+        /* --- THE MODERN PCR PLATE (GLASSMORPHISM) --- */
         .plate-frame {
-            background: #fff;
-            padding: 35px 15px 15px 35px; /* Hely a betűknek (padding-top/left) */
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15), 0 0 0 1px #ccc;
+            /* Tejüveg hatás */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            
+            padding: 40px 20px 20px 40px; /* Hely a címkéknek */
+            border-radius: 20px;
+            /* Mélyebb, realisztikusabb árnyék */
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.1),
+                inset 0 0 20px rgba(255,255,255,0.5);
             position: relative;
-            /* Fontos: inline-block, hogy a tartalomhoz igazodjon */
             display: inline-block; 
         }
 
-        /* Címkék (A-F, 1-7) */
-        .labels-top {
-            position: absolute;
-            top: 5px; left: 35px; right: 15px;
-            display: flex;
-            justify-content: space-between;
-            /* A címkék szélességét a lyukakhoz igazítjuk */
-            width: calc(7 * var(--well-size) + 6 * var(--gap-size));
-        }
-        .labels-left {
-            position: absolute;
-            top: 35px; left: 5px; bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            /* A címkék magasságát a lyukakhoz igazítjuk */
-            height: calc(6 * var(--well-size) + 5 * var(--gap-size));
-        }
+        /* Labels */
         .label {
-            font-family: monospace;
-            font-size: 10px;
-            color: #aaa;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* A label mérete legyen akkora, mint egy well, hogy középre essen */
-            width: var(--well-size); 
-            height: var(--well-size); 
+            position: absolute; font-family: monospace; font-size: 12px; color: #888; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
         }
-        /* A bal oldali címkék kicsik, nem well méretűek */
-        .labels-left .label { width: 20px; height: auto; flex: 1; }
-
+        .label-top { top: 10px; width: var(--well-size); text-align: center; }
+        .label-left { left: 10px; height: var(--well-size); vertical-align: middle; }
 
         .game-grid {
-            display: flex; /* Vízszintes sor az oszlopoknak */
-            gap: var(--gap-size);
+            display: flex; gap: var(--gap-size);
         }
 
         .column {
-            display: flex;
-            flex-direction: column; /* Függőleges oszlop a lyukaknak */
-            gap: var(--gap-size);
-            cursor: pointer;
-            width: var(--well-size); /* FIX szélesség */
+            display: flex; flex-direction: column; gap: var(--gap-size); cursor: pointer; width: var(--well-size);
         }
         
-        /* A LYUK (WELL) */
+        /* --- HIGH-TECH WELLS --- */
         .well {
-            width: var(--well-size);
-            height: var(--well-size);
-            background-color: #f0f0f0;
+            width: var(--well-size); height: var(--well-size);
+            background: #ecf0f3; /* Világosabb labor szürke */
             border-radius: 50%;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+            /* Komplexebb belső árnyék a mélységért */
+            box-shadow: 
+                inset 2px 2px 5px rgba(0,0,0,0.15),
+                inset -2px -2px 5px rgba(255,255,255,0.8);
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* Fontos: ne engedjük összenyomódni */
-            flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid #dce1e6;
+            transition: all 0.3s ease;
         }
 
-        /* Hover effect */
+        /* Hover effect: Fénygyűrű */
         @media(hover:hover) {
-            .column:hover .well { background-color: #e0e0e0; }
+            .column:hover .well { 
+                box-shadow: inset 0 0 0 2px var(--romer-red), inset 2px 2px 5px rgba(0,0,0,0.15);
+                background: #fff;
+            }
         }
 
-        /* --- FOLYADÉK (LIQUID) --- */
+        /* --- BIO-ACTIVE LIQUID --- */
         .liquid {
-            width: 80%; height: 80%;
+            width: 82%; height: 82%;
             border-radius: 50%;
             position: absolute;
             transform: scale(0);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            /* Erős külső ragyogás (fluoreszcencia) */
+            box-shadow: 0 0 15px var(--glow-color), inset 0 3px 8px rgba(255,255,255,0.6);
+            /* "Élő" pulzáló animáció */
+            animation: bioPulse 3s infinite ease-in-out;
         }
+        
+        /* Fényes felület a folyadékon */
         .liquid::after {
-            content: ''; position: absolute;
-            top: 20%; left: 20%; width: 25%; height: 25%;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
+            content: ''; position: absolute; top: 15%; left: 15%; width: 30%; height: 30%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0.8), transparent);
+            border-radius: 50%; filter: blur(1px);
         }
-        .liquid.red { background: var(--liquid-red); }
-        .liquid.green { background: var(--liquid-green); }
 
-        .anim-drop { animation: fill 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-        @keyframes fill { to { transform: scale(1); } }
+        .liquid.red { background: var(--liquid-red-grad); --glow-color: var(--glow-red); }
+        .liquid.green { background: var(--liquid-green-grad); --glow-color: var(--glow-green); }
 
-        .winner .liquid { animation: pulse 1s infinite; box-shadow: 0 0 15px var(--romer-red); }
-        @keyframes pulse { 50% { transform: scale(1.1); filter: brightness(1.2); } }
+        /* Betöltő animáció */
+        .anim-drop { animation: fill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes fill { 
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
-        /* --- MODAL --- */
+        /* "Élő" pulzálás */
+        @keyframes bioPulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.1); }
+        }
+
+        /* Győztes vonal - Intenzív ragyogás */
+        .winner .liquid { 
+            animation: winnerFlash 1s infinite alternate;
+            z-index: 10;
+        }
+        @keyframes winnerFlash {
+            from { box-shadow: 0 0 15px var(--glow-color); }
+            to { box-shadow: 0 0 35px var(--glow-color), 0 0 10px #fff; transform: scale(1.1); }
+        }
+
+        /* --- MODERN MODAL --- */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(2px);
+            background: rgba(44, 62, 80, 0.6); /* Sötétebb, modernebb overlay */
+            backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 100;
         }
         .modal-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
+            background: var(--lab-white);
+            padding: 40px 30px;
+            border-radius: 20px;
             text-align: center;
-            width: 90%;
-            max-width: 320px;
-            border-top: 5px solid var(--romer-red);
+            width: 90%; max-width: 360px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: translateY(20px); opacity: 0; transition: all 0.3s ease;
         }
-        .modal-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
-        .modal-title { margin: 0 0 10px 0; color: var(--romer-gray); }
-        .btn-modal { width: 100%; margin-top: 15px; }
+        .modal.show .modal-box { transform: translateY(0); opacity: 1; }
+
+        .modal-icon { font-size: 4rem; display: block; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .modal-title { margin: 0 0 15px 0; color: var(--romer-gray); font-weight: 800; }
+        .modal-msg { color: #666; line-height: 1.6; margin-bottom: 25px; }
+        .btn-modal { width: 100%; padding: 15px; font-size: 1rem; }
 
     </style>
 </head>
@@ -235,29 +256,30 @@
 
     <header>
         <h1><span>Romer</span> Labs®</h1>
-        <div class="tagline">Making the World's Food Safer</div>
+        <div class="tagline">Advancing Food Safety Diagnostics</div>
     </header>
 
-    <div class="status-badge" id="status">Ready for analysis. Select a column.</div>
+    <div class="status-badge" id="status">
+        <div class="status-dot"></div>
+        <span id="status-text">System ready. Initiate analysis (Player).</span>
+    </div>
 
     <div class="controls">
         <select id="difficulty">
-            <option value="1">Level 1: Rapid Test</option>
-            <option value="4" selected>Level 2: ELISA</option>
-            <option value="6">Level 3: Reference Method</option>
+            <option value="1">Method: Rapid Test (Level 1)</option>
+            <option value="4" selected>Method: ELISA (Level 2)</option>
+            <option value="6">Method: LC-MS/MS (Level 3)</option>
         </select>
-        <button onclick="game.resetGame()">NEW TEST</button>
+        <button onclick="game.resetGame()">Start New Run</button>
     </div>
 
     <div class="plate-frame">
-        <div class="labels-top">
-            <div class="label">1</div><div class="label">2</div><div class="label">3</div>
-            <div class="label">4</div><div class="label">5</div><div class="label">6</div><div class="label">7</div>
-        </div>
-        <div class="labels-left">
-            <div class="label">A</div><div class="label">B</div><div class="label">C</div>
-            <div class="label">D</div><div class="label">E</div><div class="label">F</div>
-        </div>
+        <script>
+            // Inline script to generate labels based on CSS sizes
+            for(let i=1; i<=7; i++) document.write(`<div class="label label-top" style="left: calc(40px + (${i-1} * (var(--well-size) + var(--gap-size))))">${i}</div>`);
+            const rows = ['A','B','C','D','E','F'];
+            for(let i=0; i<6; i++) document.write(`<div class="label label-left" style="top: calc(40px + (${i} * (var(--well-size) + var(--gap-size))))">${rows[i]}</div>`);
+        </script>
 
         <div id="board-container" class="game-grid">
             </div>
@@ -265,23 +287,17 @@
 
     <div id="result-modal" class="modal">
         <div class="modal-box">
-            <span id="modal-icon" class="modal-icon">🔬</span>
-            <h2 id="modal-title" class="modal-title">Result</h2>
-            <p id="modal-msg">...</p>
-            <button class="btn-modal" onclick="game.resetGame()">New Analysis</button>
+            <span id="modal-icon" class="modal-icon"></span>
+            <h2 id="modal-title" class="modal-title"></h2>
+            <p id="modal-msg" class="modal-msg"></p>
+            <button class="btn-modal" onclick="game.resetGame()">Run Next Sample</button>
         </div>
     </div>
 
 <script>
-/* GAME LOGIC 
-   Standard Connect 4 implementation adapted for Romer Labs branding.
-*/
-
-const ROWS = 6;
-const COLS = 7;
-const PLAYER = 1; 
-const AI = 2;
-const EMPTY = 0;
+/* GAME LOGIC - Unchanged from previous functional version */
+const ROWS = 6; const COLS = 7;
+const PLAYER = 1; const AI = 2; const EMPTY = 0;
 
 class PCRGame {
     constructor() {
@@ -289,102 +305,69 @@ class PCRGame {
         this.gameActive = true;
         this.difficulty = 4;
         this.uiBoard = document.getElementById('board-container');
-        this.statusDisplay = document.getElementById('status');
+        this.statusText = document.getElementById('status-text');
+        this.statusDot = document.querySelector('.status-dot');
         this.isProcessing = false;
-        
-        // Audio setup (simple beep)
         this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-
         this.initBoard();
         this.renderBoard();
-
         document.getElementById('difficulty').addEventListener('change', (e) => {
             this.difficulty = parseInt(e.target.value);
             this.resetGame();
         });
     }
-
-    initBoard() {
-        this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY));
-    }
-
+    initBoard() { this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY)); }
     resetGame() {
         this.initBoard();
         this.gameActive = true;
         this.isProcessing = false;
-        this.updateStatus("Ready for analysis. Your turn (Romer Standard).");
-        document.getElementById('result-modal').style.display = 'none';
-        
-        // Visual Reset
-        document.querySelectorAll('.well').forEach(w => {
-            w.innerHTML = '';
-            w.classList.remove('winner');
-        });
+        this.updateStatus("System ready. Initiate analysis (Player).", PLAYER);
+        const modal = document.getElementById('result-modal');
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = 'none', 300);
+        document.querySelectorAll('.well').forEach(w => { w.innerHTML = ''; w.classList.remove('winner'); });
     }
-
     renderBoard() {
         this.uiBoard.innerHTML = '';
         for (let c = 0; c < COLS; c++) {
-            const colDiv = document.createElement('div');
-            colDiv.classList.add('column');
+            const colDiv = document.createElement('div'); colDiv.classList.add('column');
             colDiv.onclick = () => this.handleClick(c);
-            
             for (let r = ROWS - 1; r >= 0; r--) {
-                const well = document.createElement('div');
-                well.classList.add('well');
-                well.dataset.row = r;
-                well.dataset.col = c;
+                const well = document.createElement('div'); well.classList.add('well');
+                well.dataset.row = r; well.dataset.col = c;
                 colDiv.appendChild(well);
             }
             this.uiBoard.appendChild(colDiv);
         }
     }
-
-    updateStatus(msg) { this.statusDisplay.innerText = msg; }
-
+    updateStatus(msg, player) {
+        this.statusText.innerText = msg;
+        this.statusDot.style.background = player === AI ? '#00b894' : 'var(--romer-red)';
+        this.statusDot.style.boxShadow = player === AI ? '0 0 10px #00b894' : '0 0 10px var(--romer-red)';
+    }
     handleClick(col) {
         if (!this.gameActive || this.isProcessing) return;
         if (this.ctx.state === 'suspended') this.ctx.resume();
-
-        // Find first empty row
         let row = -1;
-        for (let r = 0; r < ROWS; r++) {
-            if (this.board[r][col] === EMPTY) {
-                row = r;
-                break;
-            }
-        }
-
-        if (row !== -1) {
-            this.processMove(row, col, PLAYER);
-        }
+        for (let r = 0; r < ROWS; r++) { if (this.board[r][col] === EMPTY) { row = r; break; } }
+        if (row !== -1) { this.processMove(row, col, PLAYER); }
     }
-
     async processMove(row, col, player) {
         this.isProcessing = true;
         this.board[row][col] = player;
-        
         this.addLiquid(row, col, player);
-        this.playSound();
-
-        // Wait for animation
-        await new Promise(r => setTimeout(r, 400));
-
-        if (this.checkWin(player)) {
-            this.endGame(player);
-        } else if (this.checkDraw()) {
-            this.endGame(0);
-        } else {
+        this.playSound(player);
+        await new Promise(r => setTimeout(r, 450));
+        if (this.checkWin(player)) { this.endGame(player); }
+        else if (this.checkDraw()) { this.endGame(0); }
+        else {
             this.isProcessing = false;
             if (player === PLAYER) {
-                this.updateStatus("Analyzing... (AI Turn)");
-                setTimeout(() => this.makeAIMove(), 500);
-            } else {
-                this.updateStatus("Your turn.");
-            }
+                this.updateStatus("Processing sample data... (AI Turn)", AI);
+                setTimeout(() => this.makeAIMove(), 600);
+            } else { this.updateStatus("Await input. (Player Turn)", PLAYER); }
         }
     }
-
     addLiquid(row, col, player) {
         const well = document.querySelector(`.well[data-row='${row}'][data-col='${col}']`);
         if (well) {
@@ -393,109 +376,62 @@ class PCRGame {
             well.appendChild(div);
         }
     }
-
-    playSound() {
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(300, this.ctx.currentTime + 0.1);
-        g.gain.setValueAtTime(0.05, this.ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-        osc.connect(g);
-        g.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.1);
+    playSound(player) {
+        const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
+        const freq = player === PLAYER ? 600 : 400;
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq/2, this.ctx.currentTime + 0.15);
+        g.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+        osc.connect(g); g.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.15);
     }
-
     checkWin(player) {
-        // Horizontal
-        for (let r=0; r<ROWS; r++) for (let c=0; c<COLS-3; c++) 
-            if (this.allMatch(player, r,c, r,c+1, r,c+2, r,c+3)) return true;
-        // Vertical
-        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS; c++) 
-            if (this.allMatch(player, r,c, r+1,c, r+2,c, r+3,c)) return true;
-        // Diagonals
-        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS-3; c++)
-            if (this.allMatch(player, r,c, r+1,c+1, r+2,c+2, r+3,c+3)) return true;
-        for (let r=3; r<ROWS; r++) for (let c=0; c<COLS-3; c++)
-            if (this.allMatch(player, r,c, r-1,c+1, r-2,c+2, r-3,c+3)) return true;
+        for (let r=0; r<ROWS; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r,c+1, r,c+2, r,c+3)) return true;
+        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS; c++) if (this.allMatch(player, r,c, r+1,c, r+2,c, r+3,c)) return true;
+        for (let r=0; r<ROWS-3; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r+1,c+1, r+2,c+2, r+3,c+3)) return true;
+        for (let r=3; r<ROWS; r++) for (let c=0; c<COLS-3; c++) if (this.allMatch(player, r,c, r-1,c+1, r-2,c+2, r-3,c+3)) return true;
         return false;
     }
-
     allMatch(p, r1,c1, r2,c2, r3,c3, r4,c4) {
         const b = this.board;
         if (b[r1][c1]===p && b[r2][c2]===p && b[r3][c3]===p && b[r4][c4]===p) {
-            // Highlight
-            [ [r1,c1],[r2,c2],[r3,c3],[r4,c4] ].forEach(([r,c]) => {
-                document.querySelector(`.well[data-row='${r}'][data-col='${c}']`).classList.add('winner');
-            });
+            [[r1,c1],[r2,c2],[r3,c3],[r4,c4]].forEach(([r,c]) => document.querySelector(`.well[data-row='${r}'][data-col='${c}']`).classList.add('winner'));
             return true;
-        }
-        return false;
+        } return false;
     }
-
     checkDraw() { return this.board.every(row => row.every(cell => cell !== EMPTY)); }
-
     endGame(winner) {
         this.gameActive = false;
         const modal = document.getElementById('result-modal');
-        const title = document.getElementById('modal-title');
-        const msg = document.getElementById('modal-msg');
-        const icon = document.getElementById('modal-icon');
-
+        const title = document.getElementById('modal-title'); const msg = document.getElementById('modal-msg'); const icon = document.getElementById('modal-icon');
         setTimeout(() => {
-            modal.style.display = 'flex';
+            modal.style.display = 'flex'; setTimeout(() => modal.classList.add('show'), 10);
             if (winner === PLAYER) {
-                icon.innerText = "🛡️";
-                title.innerText = "SAMPLE SECURE";
-                title.style.color = "var(--romer-red)";
-                msg.innerText = "Great job! The sample is validated and safe.";
+                icon.innerText = "🛡️"; title.innerText = "SAMPLE VALIDATED"; title.style.color = "var(--romer-red)";
+                msg.innerText = "Target analytes successfully identified within safe limits using Romer Labs protocol.";
             } else if (winner === AI) {
-                icon.innerText = "⚠️";
-                title.innerText = "CONTAMINATION DETECTED";
-                title.style.color = "#7ab800";
-                msg.innerText = "Contaminant detected above threshold levels.";
+                icon.innerText = "☣️"; title.innerText = "CONTAMINATION DETECTED"; title.style.color = "#00b894";
+                msg.innerText = "Contaminant load exceeds threshold. Immediate corrective action required.";
             } else {
-                icon.innerText = "⚖️";
-                title.innerText = "RESULT INCONCLUSIVE";
-                title.style.color = "#555";
-                msg.innerText = "No clear result. Please re-test.";
+                icon.innerText = "⚠️"; title.innerText = "RESULT INCONCLUSIVE"; title.style.color = "#555";
+                msg.innerText = "Assay parameters ambiguous. Re-calibration and re-testing recommended.";
             }
         }, 800);
     }
-
     makeAIMove() {
-        const validCols = [];
-        for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) validCols.push(c);
-        
-        let col = validCols[Math.floor(Math.random() * validCols.length)];
-        
-        // Simple Logic: 1. Win if possible, 2. Block if needed
-        for(let c of validCols) {
-            let r = -1; 
-            for(let i=0;i<ROWS;i++) if(this.board[i][c]===EMPTY) { r=i; break; }
-            
-            // Try Win
-            this.board[r][c] = AI;
-            if(this.checkWin(AI)) { col = c; this.board[r][c]=EMPTY; break; } // Found win
-            this.board[r][c] = EMPTY;
-
-            // Try Block
-            this.board[r][c] = PLAYER;
-            if(this.checkWin(PLAYER)) { col = c; this.board[r][c]=EMPTY; break; } // Must block
-            this.board[r][c] = EMPTY;
+        const valid = []; for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) valid.push(c);
+        let col = valid[Math.floor(Math.random() * valid.length)];
+        for(let c of valid) {
+            let r = -1; for(let i=0;i<ROWS;i++) if(this.board[i][c]===EMPTY) { r=i; break; }
+            this.board[r][c] = AI; if(this.checkWin(AI)) { col = c; this.board[r][c]=EMPTY; break; } this.board[r][c] = EMPTY;
+            this.board[r][c] = PLAYER; if(this.checkWin(PLAYER)) { col = c; this.board[r][c]=EMPTY; break; } this.board[r][c] = EMPTY;
         }
-
-        let r = -1;
-        for (let i = 0; i < ROWS; i++) {
-            if (this.board[i][col] === EMPTY) { r = i; break; }
-        }
+        let r = -1; for (let i = 0; i < ROWS; i++) { if (this.board[i][col] === EMPTY) { r = i; break; } }
         this.processMove(r, col, AI);
     }
 }
-
 const game = new PCRGame();
-
 </script>
 </body>
 </html>
