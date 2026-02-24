@@ -79,6 +79,7 @@
         .tube-rack {
             display: flex; gap: 15px; position: absolute; bottom: 40px; left: 50px;
             background: rgba(0,0,0,0.1); padding: 10px; border-radius: 4px;
+            z-index: 2;
         }
         .tube {
             width: 30px; height: 80px;
@@ -90,11 +91,22 @@
             transition: transform 0.2s;
         }
         .tube:hover { transform: translateY(-5px); }
-        .tube.highlight { box-shadow: 0 0 15px var(--romer-red); border-color: var(--romer-red); }
+        /* Kiemelés animáció */
+        .tube.highlight { 
+            box-shadow: 0 0 15px var(--romer-red); 
+            border-color: var(--romer-red);
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
         
         .tube-label {
-            position: absolute; bottom: -25px; left: -10px; width: 50px; 
+            position: absolute; bottom: -35px; left: -10px; width: 50px; 
             text-align: center; font-size: 0.7rem; font-weight: bold;
+            color: #555;
         }
 
         .liquid {
@@ -108,10 +120,11 @@
         .pipette {
             width: 40px; height: 160px;
             position: absolute; top: 20px; right: 50px;
-            cursor: grab;
+            cursor: default;
             transition: all 0.5s ease;
             filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.2));
             z-index: 5;
+            pointer-events: none; /* A pipetta csak dekoráció, a csövekre kell kattintani */
         }
         .pipette-body {
             width: 12px; height: 100px; background: #95a5a6; margin: 0 auto;
@@ -167,24 +180,22 @@
 
         /* --- CONTROLS --- */
         .action-btn {
-            margin-top: 20px;
-            padding: 12px 30px;
+            margin-top: 30px;
+            padding: 15px 40px;
             background: var(--romer-red);
             color: white;
             border: none; border-radius: 25px;
-            font-size: 1rem; font-weight: bold;
+            font-size: 1.2rem; font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(226, 6, 19, 0.3);
-            display: none;
+            display: none; /* Alapból rejtett, JS hozza elő */
+            z-index: 20;
         }
-        .action-btn:hover { background: #c0392b; }
+        .action-btn:hover { background: #c0392b; transform: scale(1.05); }
 
         /* Animations */
         @keyframes popIn { from { transform: scale(0.8); opacity:0; } to { transform: scale(1); opacity:1; } }
-        @keyframes blink { 50% { opacity: 0.5; } }
         
-        .active-zone { animation: blink 1.5s infinite; border: 2px dashed var(--romer-red); }
-
     </style>
 </head>
 <body>
@@ -204,7 +215,7 @@
                 <div class="liquid" style="height: 30%; background: #3498db;"></div>
                 <div class="tube-label">Master Mix</div>
             </div>
-            <div class="tube" id="tube-pcr" onclick="lab.handleClick('target')">
+            <div class="tube" id="tube-target" onclick="lab.handleClick('target')">
                 <div class="liquid" id="liquid-target" style="height: 0%;"></div>
                 <div class="tube-label">PCR Tube</div>
             </div>
@@ -232,15 +243,16 @@
     </div>
 
     <div class="instruction-panel">
-        <div class="step-title" id="step-title">STEP 1: PREPARATION</div>
-        <div class="step-desc" id="step-desc">Welcome to the Lab. Let's prepare a PCR test.</div>
+        <div class="step-title" id="step-title">LOADING LAB...</div>
+        <div class="step-desc" id="step-desc">Please wait.</div>
     </div>
 
-    <button id="main-btn" class="action-btn" onclick="lab.next()">START</button>
+    <button id="main-btn" class="action-btn" onclick="lab.next()">START SIMULATION</button>
 
 <script>
 /**
  * Romer Labs - Virtual PCR Lab Logic
+ * Fixed Version
  */
 class LabGame {
     constructor() {
@@ -250,7 +262,7 @@ class LabGame {
         this.btn = document.getElementById('main-btn');
         this.title = document.getElementById('step-title');
         this.desc = document.getElementById('step-desc');
-        this.hasLiquid = false;
+        this.isAnimating = false;
         
         // State definitions
         this.states = [
@@ -258,48 +270,60 @@ class LabGame {
                 id: 'intro',
                 title: 'Introduction',
                 text: 'PCR detects pathogen DNA. First, we need to mix our DNA sample with the Master Mix reagents.',
-                btn: 'Start Protocol'
+                btn: 'START PROTOCOL',
+                highlight: null
             },
             {
                 id: 'pipette-sample',
                 title: 'Step 1: Transfer DNA',
                 text: 'Click the <b>Sample Tube</b> (Red) to aspirate the DNA.',
-                actionNeeded: 'sample'
+                actionNeeded: 'sample',
+                highlight: 'tube-sample'
             },
             {
                 id: 'dispense-sample',
                 title: 'Step 1: Transfer DNA',
                 text: 'Now click the empty <b>PCR Tube</b> to dispense the DNA.',
-                actionNeeded: 'target'
+                actionNeeded: 'target',
+                highlight: 'tube-target'
             },
             {
                 id: 'pipette-mix',
                 title: 'Step 2: Add Reagents',
                 text: 'Click the <b>Master Mix</b> (Blue) to add polymerase and primers.',
-                actionNeeded: 'mix'
+                actionNeeded: 'mix',
+                highlight: 'tube-mix'
             },
             {
                 id: 'dispense-mix',
                 title: 'Step 2: Add Reagents',
                 text: 'Dispense the Master Mix into the <b>PCR Tube</b>.',
-                actionNeeded: 'target'
+                actionNeeded: 'target',
+                highlight: 'tube-target'
             },
             {
                 id: 'cycler',
                 title: 'Step 3: Amplification',
                 text: 'The tube is ready. Click <b>RUN PCR</b> to start the Thermal Cycler.',
-                btn: 'RUN PCR'
+                btn: 'RUN PCR',
+                highlight: null
             },
             {
                 id: 'analysis',
                 title: 'Step 4: Analysis',
                 text: 'Curve detected! The exponential growth indicates a <b>Positive Result</b>.',
-                btn: 'Finish'
+                btn: 'NEW TEST',
+                highlight: null
             }
         ];
+
+        // FONTOS: Azonnal frissítjük a felületet indításkor!
+        this.updateUI();
     }
 
     next() {
+        if (this.isAnimating) return; // Ne engedjünk duplán kattintani
+        
         this.step++;
         if (this.step < this.states.length) {
             this.updateUI();
@@ -322,6 +346,12 @@ class LabGame {
             this.btn.style.display = 'none';
         }
 
+        // Highlight logic
+        document.querySelectorAll('.tube').forEach(t => t.classList.remove('highlight'));
+        if (state.highlight) {
+            document.getElementById(state.highlight).classList.add('highlight');
+        }
+
         // Scene Logic
         if (state.id === 'cycler') {
             this.setupCyclerScene();
@@ -331,17 +361,23 @@ class LabGame {
     }
 
     handleClick(targetId) {
+        if (this.isAnimating) return;
         const state = this.states[this.step];
         
         // Validation
         if (state.actionNeeded !== targetId) return;
 
+        this.isAnimating = true; // Lock interactions
+
         // Visual Logic for Pipetting
         const targetRect = document.getElementById('tube-' + targetId).getBoundingClientRect();
         const benchRect = document.getElementById('bench').getBoundingClientRect();
 
+        // Calculate position relative to bench container
+        const targetLeft = targetRect.left - benchRect.left + (targetRect.width / 2) - 20; // Center pipette
+
         // Move Pipette
-        this.pipette.style.left = (targetRect.left - benchRect.left + 5) + 'px';
+        this.pipette.style.left = targetLeft + 'px';
         this.pipette.style.top = '100px'; // Lower it
 
         setTimeout(() => {
@@ -361,6 +397,7 @@ class LabGame {
             // Raise Pipette & Proceed
             setTimeout(() => {
                 this.pipette.style.top = '20px';
+                this.isAnimating = false; // Unlock
                 this.next();
             }, 600);
 
@@ -373,6 +410,7 @@ class LabGame {
         
         const cycler = document.getElementById('cycler');
         cycler.style.display = 'flex';
+        // Center it
         cycler.style.left = '50%';
         cycler.style.transform = 'translateX(-50%)';
         
@@ -398,6 +436,7 @@ class LabGame {
     }
 }
 
+// Start Game
 const lab = new LabGame();
 </script>
 </body>
