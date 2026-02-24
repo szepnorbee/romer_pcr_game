@@ -8,9 +8,9 @@
         :root {
             /* Professional Palette */
             --romer-red: #E20613;
-            --tech-dark: #2c3e50; /* Deep technical blue/gray */
+            --tech-dark: #2c3e50; 
             --tech-light: #ecf0f1;
-            --sensor-green: #00b894; /* Tech teal, not cartoon green */
+            --sensor-green: #00b894; 
             --alert-orange: #e67e22;
             
             /* Surfaces */
@@ -33,14 +33,14 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-             /* Subtle technical grid pattern */
             background-image: 
                 linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
             background-size: 20px 20px;
+            user-select: none;
         }
 
-        /* --- HEADER (Corporate & Clean) --- */
+        /* --- HEADER --- */
         header {
             width: 100%;
             max-width: 800px;
@@ -64,13 +64,12 @@
         .status-dot { width: 8px; height: 8px; background: var(--sensor-green); border-radius: 50%; box-shadow: 0 0 5px var(--sensor-green); }
 
 
-        /* --- MAIN INTERFACE CONTAINER (The "Machine") --- */
+        /* --- ANALYZER UNIT --- */
         .analyzer-unit {
             background: var(--device-body);
             width: 100%;
             max-width: 650px;
             border-radius: 8px;
-            /* Technical beveled look */
             box-shadow: 
                 0 10px 25px rgba(0,0,0,0.15),
                 inset 0 1px 1px rgba(255,255,255,0.6),
@@ -82,14 +81,14 @@
             position: relative;
         }
 
-        /* --- DATA PANELS (Dashboard) --- */
+        /* --- DASHBOARD --- */
         .data-panel {
             display: flex;
             gap: 15px;
         }
         .readout {
             flex: 1;
-            background: #222f3e; /* Dark screen look */
+            background: #222f3e; 
             padding: 12px;
             border-radius: 4px;
             border: 1px solid #4b6584;
@@ -101,13 +100,12 @@
         .readout-value { color: var(--sensor-green); font-family: var(--font-mono); font-size: 1.2rem; font-weight: bold; letter-spacing: 1px;}
         .readout-value.alert { color: var(--romer-red); }
 
-        /* --- ANALYSIS CHAMBER (Game Area) --- */
+        /* --- CHAMBER --- */
         .analysis-chamber {
             position: relative;
             height: 280px;
             background: #fdfdfd;
             border-radius: 4px;
-            /* "Recessed" look */
             border: 3px solid #bdc3c7;
             box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
             overflow: hidden;
@@ -116,14 +114,12 @@
             justify-content: center;
         }
 
-        /* Glass overlay effect */
         .analysis-chamber::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
             pointer-events: none; z-index: 10;
         }
         
-        /* Technical grid overlay */
         .chamber-grid {
              position: absolute; top: 0; left: 0; width: 100%; height: 100%;
              background-image: 
@@ -133,11 +129,10 @@
              z-index: 1;
         }
 
-        /* --- SAMPLE VISUALIZATION (Technical, not cartoon) --- */
+        /* --- SAMPLE --- */
         .sample-container {
             position: relative; z-index: 2;
             width: 140px; height: 140px;
-            /* Placeholder for a petri dish / sample cup */
             background: #fff;
             border: 2px solid #dce1e6;
             border-radius: 50%;
@@ -146,49 +141,46 @@
             transition: transform 0.3s ease-in-out;
         }
         .sample-id { font-family: var(--font-mono); font-size: 0.7rem; color: #999; margin-bottom: 5px;}
-        .sample-icon { font-size: 2.5rem; opacity: 0.8; filter: grayscale(30%); } /* Less saturated icons */
+        .sample-icon { font-size: 2.5rem; opacity: 0.8; filter: grayscale(30%); }
 
-        /* --- LFD TEST DEVICE (Realistic) --- */
+        /* --- LFD DEVICE --- */
         .lfd-device {
             position: absolute; z-index: 5;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 70px; height: 200px;
-            /* Plastic cassette look */
             background: linear-gradient(to right, #fdfdfd, #f0f0f0);
             border-radius: 6px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.8);
             border: 1px solid #d0d0d0;
-            display: none; /* Hidden initially */
+            display: none; 
             flex-direction: column; align-items: center;
             padding: 15px 0;
         }
         
         .brand-area { color: var(--romer-red); font-weight: bold; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 15px; }
         
-        /* Recessed window for the membrane */
         .result-window {
             width: 24px; height: 100px;
-            background: #fff; /* Nitrocellulose membrane color */
+            background: #fff; 
             border-radius: 12px;
             border: 1px solid #ccc;
             box-shadow: inset 1px 2px 5px rgba(0,0,0,0.15);
             position: relative;
         }
 
-        /* Reagent Lines (Realistic Blur) */
         .reagent-line {
             position: absolute; left: 2px; right: 2px; height: 4px;
-            background: #c0392b; /* Deep crimson reagent color */
+            background: #c0392b; 
             border-radius: 2px;
-            filter: blur(0.8px); /* Realistic fuzziness */
+            filter: blur(0.8px); 
         }
-        .line-c { top: 20px; opacity: 0.85; } /* Control always shows */
-        .line-t { top: 60px; opacity: 0; transition: opacity 0.8s ease-in-out; } /* Test is dynamic */
+        .line-c { top: 20px; opacity: 0.85; } 
+        .line-t { top: 60px; opacity: 0; transition: opacity 0.8s ease-in-out; }
         
         .line-label { position: absolute; left: -18px; font-size: 9px; font-weight: bold; color: #7f8c8d; font-family: sans-serif; }
 
-        /* --- CONTROLS SECTION --- */
+        /* --- CONTROLS --- */
         .control-panel {
             display: flex; gap: 15px;
             border-top: 2px solid #d0d0d0;
@@ -201,12 +193,10 @@
             font-family: var(--font-stack); font-size: 0.9rem; font-weight: 700;
             text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
             transition: all 0.1s;
-            /* Technical button look */
             box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             position: relative; overflow: hidden;
         }
         .btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        /* Subtle metallic gradient overlay */
         .btn::after { content:''; position:absolute; top:0; left:0; width:100%; height:50%; background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent); pointer-events:none;}
 
         .btn-reject { background-color: var(--romer-red); color: white; }
@@ -214,10 +204,10 @@
         .btn-test { background-color: #34495e; color: white; width: 100%;}
         .btn-test:hover { background-color: #2c3e50; }
 
-        /* --- OVERLAYS (Professional Dialogs) --- */
+        /* --- OVERLAYS --- */
         .overlay-backdrop {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 62, 80, 0.8); /* Darker, professional matte */
+            background: rgba(44, 62, 80, 0.8);
             backdrop-filter: blur(3px);
             z-index: 20;
             display: flex; justify-content: center; align-items: center;
@@ -235,10 +225,8 @@
         .dialog-title { font-size: 1.2rem; font-weight: 700; color: var(--tech-dark); margin: 0 0 15px 0; }
         .dialog-body { font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 25px; }
         
-        /* Utility Classes */
         .hidden { display: none !important; }
         
-        /* Animations for sample movement */
         .slide-in { animation: slideIn 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000); }
         @keyframes slideIn { from { transform: translateX(150px); opacity:0; } to { transform: translateX(0); opacity:1; } }
         
@@ -374,7 +362,6 @@ class QCSystem {
     }
 
     updateDashboard() {
-        // Pad with zeros for technical look (e.g., 0012)
         this.els.scoreDisplay.innerText = this.processedCount.toString().padStart(4, '0');
         this.els.livesDisplay.innerText = this.errors;
     }
@@ -386,27 +373,22 @@ class QCSystem {
         this.els.decisionBtns.classList.add('hidden');
         this.els.lineT.style.opacity = 0; // Reset line
 
-        // Generate random sample data
         const sampleData = this.sampleTypes[Math.floor(Math.random() * this.sampleTypes.length)];
         this.els.sampleIcon.innerText = sampleData.icon;
-        // Generate fake 4-digit ID
         this.els.sampleId.innerText = Math.floor(1000 + Math.random() * 9000);
         
-        // Show sample in chamber
         this.els.sample.classList.remove('process-out');
         this.els.sample.classList.add('slide-in');
         this.els.sample.classList.remove('hidden');
 
-        // Determine Toxicity Level (Simulated analyte concentration)
-        // 60% chance of being compliant (safe), 40% non-compliant
+        // Determine Toxicity
         if (Math.random() > 0.4) {
-            // Safe range: 0.0 - 0.39
+            // Safe
             this.currentToxicity = Math.random() * (this.threshold - 0.01);
         } else {
-            // Toxic range: 0.41 - 1.0 (Strong positives prioritized for demo)
+            // Toxic
             this.currentToxicity = this.threshold + 0.01 + (Math.random() * 0.6);
         }
-        // console.log(`Sample Loaded. Toxicity: ${this.currentToxicity.toFixed(2)} (Threshold: ${this.threshold})`);
     }
 
     runAnalysis() {
@@ -418,33 +400,26 @@ class QCSystem {
         this.els.sample.classList.add('hidden');
         this.els.device.style.display = 'flex';
 
-        // Simulate LFD development time (e.g., 5 mins compressed to 1 sec)
         setTimeout(() => {
             this.developResult();
         }, 1000);
     }
 
     developResult() {
-        // Calculate line intensity based on toxicity
         let intensity = 0;
         
         if (this.currentToxicity > this.threshold) {
-            // Positive result. Map toxicity range [threshold...1.0] to opacity [0.2...1.0]
-            // A result just above threshold shows a faint line (0.2).
-            // A highly toxic result shows a strong line (1.0).
+            // Positive (Visible Line)
             const range = 1.0 - this.threshold;
             const position = this.currentToxicity - this.threshold;
             intensity = 0.2 + ((position / range) * 0.8);
-             // Cap at 1.0
             if (intensity > 1.0) intensity = 1.0;
         } else {
-            // Negative result. Extremely faint ghost line or pure zero.
+            // Negative (Ghost line or empty)
             intensity = Math.random() < 0.8 ? 0 : 0.05;
         }
         
         this.els.lineT.style.opacity = intensity.toFixed(2);
-        
-        // Enable decision phase
         this.els.decisionBtns.classList.remove('hidden');
         this.isBusy = false;
     }
@@ -456,28 +431,22 @@ class QCSystem {
         const isPositive = this.currentToxicity > this.threshold;
         let isCorrectDecision = false;
 
-        // Decision Logic:
-        // Positive Sample (Toxic) MUST be Rejected.
-        // Negative Sample (Safe) MUST be Accepted.
+        // Logic: Visible Line (Positive) must be REJECTED
         if (action === 'reject' && isPositive) isCorrectDecision = true;
         if (action === 'accept' && !isPositive) isCorrectDecision = true;
 
-        // Visual Feedback & State Update
         this.els.decisionBtns.classList.add('hidden');
         this.els.device.style.display = 'none';
+        
         // Show sample briefly processing out
         this.els.sample.classList.remove('hidden', 'slide-in');
         this.els.sample.classList.add('process-out');
 
         if (isCorrectDecision) {
             this.processedCount++;
-            // Brief delay before next sample
             setTimeout(() => this.loadNextSample(), 800);
         } else {
             this.errors++;
-            // TODO: Add professional error toast/alert here if desired.
-            // For now, just update dashboard.
-            
             if (this.errors >= this.maxErrors) {
                 setTimeout(() => this.terminateSession(), 800);
             } else {
@@ -493,8 +462,9 @@ class QCSystem {
     }
 }
 
-// Initialize System
-const qcSystem = new QCSystem();
+// A JAVÍTÁS ITT TÖRTÉNT:
+// A HTML gombok a "game" objektumot keresik, ezért ezen a néven példányosítjuk.
+const game = new QCSystem();
 
 </script>
 </body>
