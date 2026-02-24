@@ -3,192 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Romer Labs - Diagnostic Defender</title>
+    <title>Romer Labs - Safety Gatekeeper</title>
     <style>
-        /* --- CORE STYLES --- */
-        * { box-sizing: border-box; }
-        
         :root {
             --romer-red: #E20613;
-            --romer-gray: #333333;
-            --lab-bg: #f4f6f9;
-            --well-size: 11.5vw; 
-            --gap-size: 1.5vw;
-            
-            /* Dynamic Enemy Colors (CSS Variables updated by JS) */
-            --enemy-color: #7ab800; /* Default Green */
-        }
-
-        @media (min-width: 550px) {
-            :root { --well-size: 54px; --gap-size: 10px; }
+            --romer-gray: #333;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --accept-green: #2ecc71;
+            --reject-red: #e74c3c;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--lab-bg);
+            background-color: var(--bg-color);
             color: var(--romer-gray);
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            /* Subtle Pattern */
-            background-image: radial-gradient(#dfe3e8 1px, transparent 1px);
-            background-size: 20px 20px;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- HEADER & BRANDING --- */
+        /* --- HEADER --- */
         header {
-            text-align: center;
-            margin-bottom: 20px;
             background: white;
-            padding: 20px 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
             border-bottom: 4px solid var(--romer-red);
         }
-        h1 { margin: 0; font-size: 1.8rem; font-weight: 800; color: var(--romer-gray); letter-spacing: -0.5px; }
-        h1 span { color: var(--romer-red); }
-        .tagline { margin-top: 5px; color: #666; font-size: 0.9rem; font-weight: 500; }
+        h1 { margin: 0; font-size: 1.5rem; color: #555; }
+        h1 span { color: var(--romer-red); font-weight: 800; }
 
-        /* --- INFO PANEL (The Educational Part) --- */
-        .info-panel {
-            background: white;
-            border-left: 5px solid var(--romer-red);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        /* --- DASHBOARD (Score & Lives) --- */
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
             max-width: 500px;
-            width: 100%;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-weight: bold;
+        }
+        .score-box { color: var(--romer-gray); }
+        .lives-box { color: var(--romer-red); }
+
+        /* --- GAME AREA --- */
+        .game-container {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            height: 400px;
+            background: #e0e0e0; /* Conveyor belt color */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Moving Pattern for Conveyor Belt */
+        .conveyor-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: repeating-linear-gradient(45deg, #ddd 0, #ddd 10px, #e0e0e0 10px, #e0e0e0 20px);
+            opacity: 0.5;
+            animation: slide 2s linear infinite;
+        }
+        @keyframes slide { from { background-position: 0 0; } to { background-position: 40px 0; } }
+
+        /* --- THE SAMPLE (Corn/Wheat) --- */
+        .sample-item {
+            position: relative;
+            z-index: 2;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
-            gap: 15px;
-        }
-        .info-icon { font-size: 2rem; }
-        .info-text h3 { margin: 0 0 5px 0; font-size: 1rem; color: var(--romer-red); }
-        .info-text p { margin: 0; font-size: 0.85rem; line-height: 1.4; color: #555; }
-
-        /* --- CONTROLS --- */
-        .controls {
-            display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 500px;
+            justify-content: center;
+            font-size: 3rem;
+            transition: transform 0.3s;
         }
         
-        select {
-            padding: 12px; border-radius: 6px; border: 1px solid #ccc;
-            font-size: 0.9rem; flex-grow: 1; background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        button.action-btn {
-            background: var(--romer-red); color: white; border: none;
-            padding: 12px 25px; border-radius: 6px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(226, 6, 19, 0.3);
-            transition: transform 0.1s;
-        }
-        button.action-btn:active { transform: translateY(2px); }
-
-        /* --- THE PLATE (Clean & Scientific) --- */
-        .plate-container {
-            background: white;
-            padding: 35px 20px 20px 40px; /* Space for labels */
-            border-radius: 12px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1), inset 0 0 0 1px #e0e0e0;
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Labels */
-        .grid-labels-top {
-            position: absolute; top: 10px; left: 40px; right: 20px;
-            display: flex; justify-content: space-between;
-            width: calc(7 * var(--well-size) + 6 * var(--gap-size));
-            font-family: monospace; font-size: 12px; color: #999; font-weight: bold;
-        }
-        .grid-labels-left {
-            position: absolute; top: 35px; left: 10px; bottom: 20px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            height: calc(6 * var(--well-size) + 5 * var(--gap-size));
-            font-family: monospace; font-size: 12px; color: #999; font-weight: bold;
-        }
-
-        .game-grid { display: flex; gap: var(--gap-size); }
-        .column { display: flex; flex-direction: column; gap: var(--gap-size); cursor: pointer; width: var(--well-size); }
-
-        /* WELLS & LIQUIDS - NO PULSE, CLEAN LOOK */
-        .well {
-            width: var(--well-size); height: var(--well-size);
-            background: #f0f2f5;
-            border-radius: 50%;
-            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.15);
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        
-        /* Hover indication */
-        @media(hover:hover) {
-            .column:hover .well { background: #eef2ff; }
-        }
-
-        .liquid {
-            width: 80%; height: 80%;
-            border-radius: 50%;
+        /* --- THE TEST DEVICE (Overlay) --- */
+        .test-device {
             position: absolute;
-            transform: scale(0);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Player (Romer) - Always Red */
-        .liquid.romer {
-            background: radial-gradient(circle at 30% 30%, #ff7675, var(--romer-red));
-        }
-        /* Enemy - Dynamic Color */
-        .liquid.enemy {
-            background: radial-gradient(circle at 30% 30%, #ffffff 10%, var(--enemy-color));
-        }
-
-        /* Highlight reflection for glass look */
-        .liquid::after {
-            content: ''; position: absolute; top: 15%; left: 15%;
-            width: 25%; height: 25%; background: rgba(255,255,255,0.7);
-            border-radius: 50%; filter: blur(1px);
-        }
-
-        .liquid.filled { transform: scale(1); }
-
-        /* Winner Highlight - Static, strong glow */
-        .well.winner {
-            box-shadow: 0 0 0 3px var(--romer-red), 0 0 15px rgba(226, 6, 19, 0.4);
+            z-index: 3;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 60px;
+            height: 180px;
             background: white;
-            z-index: 10;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            padding: 10px;
+            align-items: center;
+        }
+        
+        /* AgraStrip Branding Look */
+        .device-cap { width: 100%; height: 20px; background: var(--romer-red); border-radius: 2px 2px 0 0; margin-bottom: 20px;}
+        .result-window {
+            width: 20px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* --- MODAL --- */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            display: none; justify-content: center; align-items: center; z-index: 100;
+        /* CONTROL LINE (Always visible) */
+        .line-c {
+            position: absolute; top: 15px; left: 2px; right: 2px; height: 4px;
+            background: #d63031; /* Red line */
+            border-radius: 2px;
+            opacity: 0.8;
         }
-        .modal-content {
-            background: white; padding: 40px; border-radius: 12px; text-align: center;
-            max-width: 400px; width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            border-top: 6px solid var(--romer-red);
+        
+        /* TEST LINE (Variable Intensity) */
+        .line-t {
+            position: absolute; top: 45px; left: 2px; right: 2px; height: 4px;
+            background: #d63031; /* Red line */
+            border-radius: 2px;
+            opacity: 0; /* Dynamic */
+            transition: opacity 1s ease-in-out;
         }
-        .modal-icon { font-size: 3rem; display: block; margin-bottom: 15px; }
-        .modal-title { margin: 0 0 10px 0; color: var(--romer-gray); }
-        .modal-msg { color: #555; line-height: 1.5; margin-bottom: 25px; font-size: 0.95rem; }
-        .modal-link {
-            display: block; margin-top: 15px; color: var(--romer-red); 
-            text-decoration: none; font-weight: bold; font-size: 0.9rem;
+        
+        .label-c { position: absolute; top: 12px; left: -15px; font-size: 10px; font-weight: bold; color: #999; }
+        .label-t { position: absolute; top: 42px; left: -15px; font-size: 10px; font-weight: bold; color: #999; }
+
+        /* --- ACTION BUTTONS --- */
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            width: 90%;
+            max-width: 500px;
         }
-        .modal-link:hover { text-decoration: underline; }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            color: white;
+            transition: transform 0.1s, filter 0.2s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+
+        .btn-reject { background-color: var(--reject-red); }
+        .btn-accept { background-color: var(--accept-green); }
+        .btn-test { background-color: #3498db; width: 100%; }
+
+        /* --- OVERLAYS --- */
+        .message-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        .message-icon { font-size: 4rem; margin-bottom: 10px; }
+        .message-text { font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; color: var(--romer-gray); }
+        .btn-start { background: var(--romer-red); color: white; padding: 12px 30px; border-radius: 25px; border:none; font-size:1rem; cursor: pointer; font-weight: bold;}
+
+        /* Animációk */
+        .slide-in { animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes slideIn { from { transform: translateX(100%) scale(0.5); opacity:0; } to { transform: translateX(0) scale(1); opacity:1; } }
+        
+        .slide-out-left { animation: slideOutLeft 0.5s forwards; }
+        @keyframes slideOutLeft { to { transform: translateX(-200%) rotate(-20deg); opacity: 0; } }
+        
+        .slide-out-right { animation: slideOutRight 0.5s forwards; }
+        @keyframes slideOutRight { to { transform: translateX(200%) rotate(20deg); opacity: 0; } }
 
     </style>
 </head>
@@ -196,308 +205,205 @@
 
     <header>
         <h1><span>Romer</span> Labs®</h1>
-        <div class="tagline">Making the World's Food Safer</div>
+        <div style="font-size: 0.8rem; color: #888;">Diagnostic QC Simulator</div>
     </header>
 
-    <div class="controls">
-        <select id="scenario-selector">
-            <option value="mycotoxin">Scenario: Mycotoxins (AgraStrip®)</option>
-            <option value="allergen">Scenario: Allergens (AgraQuant®)</option>
-            <option value="pathogen">Scenario: Pathogens (RapidChek®)</option>
-        </select>
-        <button class="action-btn" onclick="game.resetGame()">Start Analysis</button>
+    <div class="dashboard">
+        <div class="score-box">BATCH: <span id="score">0</span></div>
+        <div class="lives-box">MISSED: <span id="lives">0</span>/3</div>
     </div>
 
-    <div class="info-panel">
-        <div class="info-icon" id="scenario-icon">🛡️</div>
-        <div class="info-text">
-            <h3 id="scenario-title">Romer Labs Protection</h3>
-            <p id="scenario-desc">Select a scenario to test samples against common food safety threats.</p>
+    <div class="game-container">
+        <div class="conveyor-bg"></div>
+        
+        <div id="sample" class="sample-item">🌽</div>
+        
+        <div id="test-strip" class="test-device">
+            <div class="device-cap"></div>
+            <div class="result-window">
+                <span class="label-c">C</span>
+                <div class="line-c"></div>
+                
+                <span class="label-t">T</span>
+                <div id="line-t" class="line-t"></div>
+            </div>
+            <div style="margin-top:10px; font-size: 0.7rem; font-weight:bold; color:#ccc;">AgraStrip®</div>
+        </div>
+
+        <div id="start-screen" class="message-overlay" style="display:flex;">
+            <div class="message-icon">🛡️</div>
+            <div class="message-text">
+                Be the Quality Manager.<br>
+                Test samples. Check the line intensity.<br>
+                <span style="font-size:0.9rem; font-weight:normal; display:block; margin-top:10px; color:#555;">
+                    Strong Line = TOXIC (Reject)<br>
+                    No/Faint Line = SAFE (Accept)
+                </span>
+            </div>
+            <button class="btn-start" onclick="game.start()">START SHIFT</button>
+        </div>
+
+        <div id="game-over-screen" class="message-overlay">
+            <div class="message-icon">🛑</div>
+            <div class="message-text" id="end-msg">Production Halted!</div>
+            <button class="btn-start" onclick="game.start()">TRY AGAIN</button>
         </div>
     </div>
 
-    <div class="plate-container">
-        <div class="grid-labels-top">
-            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
-        </div>
-        <div class="grid-labels-left">
-            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span>
-        </div>
-
-        <div id="board-container" class="game-grid"></div>
-    </div>
-
-    <div id="result-modal" class="modal">
-        <div class="modal-content">
-            <span id="modal-icon" class="modal-icon"></span>
-            <h2 id="modal-title" class="modal-title"></h2>
-            <p id="modal-msg" class="modal-msg"></p>
-            <button class="action-btn" onclick="game.resetGame()">Run Next Sample</button>
-            <a href="#" class="modal-link">View diagnostic solutions</a>
+    <div class="actions">
+        <button id="btn-test" class="btn btn-test" onclick="game.runTest()">RUN TEST (AgraStrip)</button>
+        <div id="decision-btns" style="display:none; width:100%; gap:20px;">
+            <button class="btn btn-reject" onclick="game.decide('reject')">REJECT 🚫</button>
+            <button class="btn btn-accept" onclick="game.decide('accept')">ACCEPT ✅</button>
         </div>
     </div>
 
 <script>
 /**
- * Romer Labs - Diagnostic Defender
- * Content-Focused Version
+ * Romer Labs - Quality Control Game
+ * Focus: Visual intensity interpretation (Simulation of LFD/ELISA)
  */
 
-const ROWS = 6;
-const COLS = 7;
-const PLAYER = 1; 
-const AI = 2;
-const EMPTY = 0;
-
-// Scenario Data (The Brand Message Layer)
-const SCENARIOS = {
-    mycotoxin: {
-        title: "Threat: Aflatoxin",
-        desc: "Aflatoxins are poisonous carcinogens produced by molds. <strong>Solution: AgraStrip® Pro</strong> can detect them on-site in minutes.",
-        enemyName: "Mycotoxin",
-        enemyColor: "#7ab800", // Toxin Green
-        icon: "🌽",
-        winMsg: "Sample Validated! AgraStrip® successfully detected and isolated the contamination before processing.",
-        loseMsg: "Contamination Spread! Aflatoxin levels exceeded safety limits. Ensure testing frequency is increased."
-    },
-    allergen: {
-        title: "Threat: Gluten Trace",
-        desc: "Undeclared allergens trigger recalls. <strong>Solution: AgraQuant® ELISA</strong> provides precise quantification.",
-        enemyName: "Gluten",
-        enemyColor: "#9b59b6", // Allergen Purple
-        icon: "🌾",
-        winMsg: "Safe! AgraQuant® confirmed the product is Gluten-Free within regulatory standards.",
-        loseMsg: "Recall Risk! Gluten traces found in final product. Cross-contamination likely occurred."
-    },
-    pathogen: {
-        title: "Threat: Salmonella",
-        desc: "Pathogens cause severe illness. <strong>Solution: RapidChek®</strong> offers accurate results with simple workflow.",
-        enemyName: "Salmonella",
-        enemyColor: "#e67e22", // Pathogen Orange
-        icon: "🧫",
-        winMsg: "Pathogen Negative. RapidChek® confirms the batch is safe for release.",
-        loseMsg: "Outbreak Warning! Salmonella positive. Production line requires immediate sanitation."
-    }
-};
-
-class Game {
+class QCGame {
     constructor() {
-        this.board = [];
-        this.gameActive = true;
-        this.currentScenario = SCENARIOS.mycotoxin;
-        this.uiBoard = document.getElementById('board-container');
-        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.score = 0;
+        this.mistakes = 0;
+        this.maxMistakes = 3;
+        this.currentToxicity = 0; // 0.0 to 1.0
+        this.threshold = 0.4; // Above this, it's toxic
         
-        this.initBoard();
-        this.renderBoard();
+        // DOM Elements
+        this.sampleEl = document.getElementById('sample');
+        this.stripEl = document.getElementById('test-strip');
+        this.lineTEl = document.getElementById('line-t');
+        this.btnTest = document.getElementById('btn-test');
+        this.decisionBtns = document.getElementById('decision-btns');
+        this.scoreEl = document.getElementById('score');
+        this.livesEl = document.getElementById('lives');
+        this.startScreen = document.getElementById('start-screen');
+        this.endScreen = document.getElementById('game-over-screen');
         
-        // Scenario Change Listener
-        document.getElementById('scenario-selector').addEventListener('change', (e) => {
-            this.currentScenario = SCENARIOS[e.target.value];
-            this.updateScenarioUI();
-            this.resetGame();
-        });
-
-        // Initial UI Set
-        this.updateScenarioUI();
+        // Products
+        this.icons = ['🌽', '🌾', '🥜', '🥜', '🌽'];
     }
 
-    initBoard() {
-        this.board = Array(ROWS).fill().map(() => Array(COLS).fill(EMPTY));
+    start() {
+        this.score = 0;
+        this.mistakes = 0;
+        this.updateUI();
+        this.startScreen.style.display = 'none';
+        this.endScreen.style.display = 'none';
+        this.nextSample();
     }
 
-    updateScenarioUI() {
-        const s = this.currentScenario;
-        document.getElementById('scenario-title').innerHTML = s.title;
-        document.getElementById('scenario-desc').innerHTML = s.desc;
-        document.getElementById('scenario-icon').innerText = s.icon;
-        document.documentElement.style.setProperty('--enemy-color', s.enemyColor);
-    }
-
-    resetGame() {
-        this.initBoard();
-        this.gameActive = true;
+    nextSample() {
+        // Reset state
+        this.sampleEl.className = 'sample-item slide-in';
+        this.sampleEl.innerText = this.icons[Math.floor(Math.random() * this.icons.length)];
+        this.sampleEl.style.display = 'flex';
         
-        // Hide modal
-        document.getElementById('result-modal').style.display = 'none';
-        
-        // Clear board visually
-        document.querySelectorAll('.well').forEach(w => {
-            w.innerHTML = '';
-            w.classList.remove('winner');
-        });
-    }
+        this.stripEl.style.display = 'none';
+        this.btnTest.style.display = 'block';
+        this.decisionBtns.style.display = 'none';
+        this.lineTEl.style.opacity = 0; // Reset line
 
-    renderBoard() {
-        this.uiBoard.innerHTML = '';
-        for (let c = 0; c < COLS; c++) {
-            const colDiv = document.createElement('div');
-            colDiv.classList.add('column');
-            colDiv.onclick = () => this.handleMove(c);
-            
-            for (let r = ROWS - 1; r >= 0; r--) {
-                const well = document.createElement('div');
-                well.classList.add('well');
-                well.dataset.row = r;
-                well.dataset.col = c;
-                colDiv.appendChild(well);
-            }
-            this.uiBoard.appendChild(colDiv);
+        // Generate random toxicity
+        // 50% chance of being safe, 50% chance of varying toxicity
+        if (Math.random() > 0.5) {
+            this.currentToxicity = Math.random() * 0.3; // Safe (0.0 - 0.3)
+        } else {
+            this.currentToxicity = 0.5 + (Math.random() * 0.5); // Toxic (0.5 - 1.0)
         }
     }
 
-    handleMove(col) {
-        if (!this.gameActive) return;
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-
-        const row = this.getNextOpenRow(col);
-        if (row !== -1) {
-            this.placePiece(row, col, PLAYER);
-            if (!this.checkGameEnd(PLAYER)) {
-                // AI Turn
-                setTimeout(() => this.makeAIMove(), 500);
-            }
-        }
-    }
-
-    getNextOpenRow(col) {
-        for (let r = 0; r < ROWS; r++) {
-            if (this.board[r][col] === EMPTY) return r;
-        }
-        return -1;
-    }
-
-    placePiece(row, col, player) {
-        this.board[row][col] = player;
+    runTest() {
+        this.btnTest.style.display = 'none';
         
-        const well = document.querySelector(`.well[data-row='${row}'][data-col='${col}']`);
-        const piece = document.createElement('div');
-        piece.classList.add('liquid', player === PLAYER ? 'romer' : 'enemy');
-        well.appendChild(piece);
-        
-        // Force reflow for transition
-        piece.offsetHeight; 
-        piece.classList.add('filled');
-        
-        this.playSound(player === PLAYER ? 600 : 300);
-    }
+        // Show strip
+        this.stripEl.style.display = 'flex';
+        this.stripEl.classList.add('slide-in');
 
-    makeAIMove() {
-        if (!this.gameActive) return;
-        
-        // Simple AI: 1. Try Win, 2. Block Player, 3. Random
-        const validCols = [];
-        for(let c=0; c<COLS; c++) if(this.board[ROWS-1][c]===EMPTY) validCols.push(c);
-        
-        if(validCols.length === 0) return;
-
-        let col = validCols[Math.floor(Math.random() * validCols.length)];
-        
-        // Look for immediate win or block
-        const checkMove = (player) => {
-            for (let c of validCols) {
-                const r = this.getNextOpenRow(c);
-                this.board[r][c] = player;
-                if (this.checkWin(player)) { this.board[r][c] = EMPTY; return c; }
-                this.board[r][c] = EMPTY;
-            }
-            return null;
-        };
-
-        const winMove = checkMove(AI);
-        const blockMove = checkMove(PLAYER);
-        
-        if (winMove !== null) col = winMove;
-        else if (blockMove !== null) col = blockMove;
-
-        const row = this.getNextOpenRow(col);
-        this.placePiece(row, col, AI);
-        this.checkGameEnd(AI);
-    }
-
-    checkGameEnd(player) {
-        if (this.checkWin(player)) {
-            this.endGame(player);
-            return true;
-        }
-        if (this.board.every(row => row.every(cell => cell !== EMPTY))) {
-            this.endGame(0);
-            return true;
-        }
-        return false;
-    }
-
-    checkWin(player) {
-        // Horizontal, Vertical, Diagonal Logic
-        const checkLine = (a,b,c,d) => (a===player && b===player && c===player && d===player);
-        
-        for (let r=0; r<ROWS; r++) {
-            for (let c=0; c<COLS; c++) {
-                if (c+3 < COLS && checkLine(this.board[r][c], this.board[r][c+1], this.board[r][c+2], this.board[r][c+3])) {
-                    this.highlightWin([[r,c],[r,c+1],[r,c+2],[r,c+3]]); return true;
-                }
-                if (r+3 < ROWS) {
-                    if (checkLine(this.board[r][c], this.board[r+1][c], this.board[r+2][c], this.board[r+3][c])) {
-                        this.highlightWin([[r,c],[r+1,c],[r+2,c],[r+3,c]]); return true;
-                    }
-                    if (c+3 < COLS && checkLine(this.board[r][c], this.board[r+1][c+1], this.board[r+2][c+2], this.board[r+3][c+3])) {
-                        this.highlightWin([[r,c],[r+1,c+1],[r+2,c+2],[r+3,c+3]]); return true;
-                    }
-                    if (c-3 >= 0 && checkLine(this.board[r][c], this.board[r+1][c-1], this.board[r+2][c-2], this.board[r+3][c-3])) {
-                        this.highlightWin([[r,c],[r+1,c-1],[r+2,c-2],[r+3,c-3]]); return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    highlightWin(coords) {
-        coords.forEach(([r,c]) => {
-            document.querySelector(`.well[data-row='${r}'][data-col='${c}']`).classList.add('winner');
-        });
-    }
-
-    endGame(winner) {
-        this.gameActive = false;
-        const modal = document.getElementById('result-modal');
-        const title = document.getElementById('modal-title');
-        const msg = document.getElementById('modal-msg');
-        const icon = document.getElementById('modal-icon');
-        const s = this.currentScenario;
-
+        // Simulate Development Time (Fast for game)
         setTimeout(() => {
-            modal.style.display = 'flex';
-            if (winner === PLAYER) {
-                icon.innerText = "🛡️";
-                title.innerText = "TEST PASSED";
-                title.style.color = "var(--romer-red)";
-                msg.innerHTML = s.winMsg;
-            } else if (winner === AI) {
-                icon.innerText = "⚠️";
-                title.innerText = "TEST FAILED";
-                title.style.color = s.enemyColor;
-                msg.innerHTML = s.loseMsg;
+            // Visualize result based on toxicity
+            // Logic: Competitive LFD (Line disappears if toxic) or Sandwich (Line appears)?
+            // Let's stick to simple intuitive logic for non-scientists:
+            // DARKER LINE = MORE TOXIC (Sandwich assay logic, e.g. Pathogens)
+            // OR stick to Romer's AgraStrip Mycotoxin (often cut-off).
+            // Let's use: VISIBLE LINE = POSITIVE (Contaminated) for intuition.
+            
+            let opacity = 0;
+            if (this.currentToxicity > this.threshold) {
+                // It is toxic. Show line intensity based on how toxic it is.
+                // Map 0.4-1.0 to 0.3-1.0 opacity
+                opacity = 0.3 + (this.currentToxicity * 0.7); 
             } else {
-                icon.innerText = "⚖️";
-                title.innerText = "INCONCLUSIVE";
-                msg.innerHTML = "Result unclear. Please re-run the assay.";
+                // Safe. Very faint ghost line or 0
+                opacity = Math.random() * 0.1; 
             }
-        }, 800);
+            
+            this.lineTEl.style.opacity = opacity;
+            
+            // Allow decision
+            this.decisionBtns.style.display = 'flex';
+        }, 600);
     }
 
-    playSound(freq) {
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-        g.gain.setValueAtTime(0.05, this.ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-        osc.connect(g); g.connect(this.ctx.destination);
-        osc.start(); osc.stop(this.ctx.currentTime + 0.1);
+    decide(action) {
+        const isToxic = this.currentToxicity > this.threshold;
+        let correct = false;
+
+        if (action === 'reject' && isToxic) correct = true; // Correctly rejected bad sample
+        if (action === 'accept' && !isToxic) correct = true; // Correctly accepted good sample
+
+        // Animation out
+        this.sampleEl.classList.remove('slide-in');
+        if (action === 'reject') {
+            this.sampleEl.classList.add('slide-out-left'); // Toss to trash
+        } else {
+            this.sampleEl.classList.add('slide-out-right'); // Send to production
+        }
+        
+        this.stripEl.style.display = 'none';
+
+        if (correct) {
+            this.score++;
+            this.showFeedback("Correct!", "green");
+            setTimeout(() => this.nextSample(), 800);
+        } else {
+            this.mistakes++;
+            let msg = isToxic ? "⚠️ Danger! Toxic sample accepted!" : "💸 Waste! Safe sample rejected.";
+            this.showFeedback(msg, "red");
+            
+            if (this.mistakes >= this.maxMistakes) {
+                setTimeout(() => this.gameOver(), 800);
+            } else {
+                setTimeout(() => this.nextSample(), 1000);
+            }
+        }
+        this.updateUI();
+    }
+
+    showFeedback(text, color) {
+        // Quick toast could go here, for now just logic
+        // We could briefly change background color
+        document.body.style.backgroundColor = color === "red" ? "#ffebee" : "#e8f5e9";
+        setTimeout(() => document.body.style.backgroundColor = "#f4f7f6", 300);
+    }
+
+    updateUI() {
+        this.scoreEl.innerText = this.score;
+        this.livesEl.innerText = this.mistakes;
+    }
+
+    gameOver() {
+        document.getElementById('end-msg').innerHTML = `Shift Ended.<br>Batches Validated: ${this.score}`;
+        this.endScreen.style.display = 'flex';
     }
 }
 
-const game = new Game();
+const game = new QCGame();
+
 </script>
 </body>
 </html>
