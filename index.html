@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 – Pipette Precision | Romer Labs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>404 – Precision Required | Romer Labs</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -12,691 +12,545 @@
     --rl-teal-mid: #008080;
     --rl-teal-light: #38A3A5;
     --rl-teal-pale: #E0F2F1;
-    --rl-teal-faint: #F2FAFA;
-    --rl-accent-green: #57CC99;
     --rl-accent-lime: #80ED99;
     --rl-white: #FFFFFF;
-    --rl-gray-100: #EDF1F2;
+    --rl-gray-100: #F5F7F8;
     --rl-gray-200: #D5DCDE;
     --rl-gray-400: #8A9A9E;
-    --rl-gray-600: #4A5C60;
     --rl-text: #1A2C30;
     --rl-danger: #D64545;
-    --rl-warning: #E8A838;
     --rl-success: #38A35A;
-    --rl-liquid: #5BC0EB;
-    --rl-liquid-deep: #2A8BB5;
+    --rl-liquid: #4FC3F7;
+    --rl-liquid-dark: #0288D1;
   }
+  
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family:'Outfit',sans-serif; background:var(--rl-white);
+    font-family:'Outfit',sans-serif; background:var(--rl-gray-100);
     color:var(--rl-text); min-height:100vh; overflow-x:hidden;
-    user-select:none; -webkit-user-select:none;
+    user-select:none; -webkit-user-select:none; cursor: default;
+  }
+
+  .bg-pattern {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.03;
+    background-image: radial-gradient(var(--rl-teal-dark) 1px, transparent 1px);
+    background-size: 30px 30px;
   }
 
   /* NAVBAR */
   .navbar {
     background:var(--rl-white); border-bottom:1px solid var(--rl-gray-200);
-    padding:0 32px; height:56px; display:flex; align-items:center;
+    padding:0 32px; height:60px; display:flex; align-items:center;
     justify-content:space-between; position:relative; z-index:50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
   }
-  .navbar-logo { display:flex; align-items:center; gap:4px; }
-  .navbar-logo svg { height:24px; width:auto; }
-  .dsm-badge { font-size:9px; color:var(--rl-gray-400); letter-spacing:0.3px; }
+  .navbar-logo img { height:28px; width:auto; display: block; }
   .nav-links { display:flex; gap:24px; list-style:none; }
-  .nav-links a { text-decoration:none; color:var(--rl-gray-600); font-size:12px; font-weight:500; }
+  .nav-links a { text-decoration:none; color:var(--rl-gray-400); font-size:13px; font-weight:600; transition: color 0.2s; }
+  .nav-links a:hover { color:var(--rl-teal); }
   @media(max-width:700px){ .nav-links{display:none;} }
 
-  /* HERO COMPACT */
+  /* HERO */
   .hero {
-    background:linear-gradient(160deg,var(--rl-teal-dark),var(--rl-teal) 60%,var(--rl-teal-mid));
-    padding:28px 24px 24px; text-align:center; position:relative; overflow:hidden;
+    background: radial-gradient(circle at center, var(--rl-teal-dark), #002e33);
+    padding: 40px 24px 30px; text-align:center; position:relative; overflow:hidden;
+    color: var(--rl-white);
   }
-  .hero::before {
-    content:''; position:absolute; top:-50%; right:-20%; width:400px; height:400px;
-    background:radial-gradient(ellipse,rgba(87,204,153,0.1),transparent 70%);
-    border-radius:50%;
+  .hero::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:60px;
+    background: linear-gradient(to top, var(--rl-gray-100), transparent);
+    pointer-events: none;
   }
-  .hero-content { position:relative; z-index:2; }
-  .error-tag {
-    display:inline-flex; align-items:center; gap:7px;
-    background:rgba(255,255,255,0.08); backdrop-filter:blur(8px);
-    border:1px solid rgba(255,255,255,0.12); padding:4px 14px; border-radius:100px;
-    font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500;
-    color:rgba(255,255,255,0.7); letter-spacing:1.5px; text-transform:uppercase;
-    margin-bottom:12px;
+  .error-code {
+    font-family:'IBM Plex Mono',monospace; font-size:clamp(60px, 10vw, 90px);
+    font-weight:700; line-height:1; letter-spacing:-4px;
+    background: -webkit-linear-gradient(45deg, #fff, var(--rl-teal-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    opacity: 0.9;
   }
-  .error-tag .blink { width:6px;height:6px;background:var(--rl-accent-lime);border-radius:50%;animation:blink 2s infinite; }
-  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-  .hero h1 {
-    font-family:'IBM Plex Mono',monospace; font-size:clamp(40px,8vw,64px);
-    font-weight:600; color:#fff; line-height:1; margin-bottom:6px; letter-spacing:-2px;
-  }
-  .hero h2 { font-size:clamp(14px,2.2vw,18px); font-weight:500; color:rgba(255,255,255,.85); margin-bottom:4px; }
-  .hero p { font-size:13px; color:rgba(255,255,255,.5); max-width:400px; margin:0 auto; line-height:1.5; font-weight:300; }
+  .hero h2 { font-size:18px; font-weight:400; color:rgba(255,255,255,0.8); margin-bottom:8px; }
+  .hero p { font-size:14px; color:rgba(255,255,255,0.5); max-width:440px; margin:0 auto; line-height:1.6; }
 
   /* HUD */
+  .hud-container {
+    max-width: 800px; margin: -20px auto 0; position: relative; z-index: 10;
+    padding: 0 16px;
+  }
   .hud {
-    max-width:900px; margin:0 auto; padding:16px 16px 0;
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+    background: var(--rl-white); border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,72,81,0.08);
+    padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
+    border: 1px solid var(--rl-gray-200);
   }
-  .hud-left { display:flex; align-items:center; gap:8px; }
-  .level-tag {
-    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
-    color:var(--rl-teal); background:var(--rl-teal-faint); border:1px solid var(--rl-teal-pale);
-    padding:3px 10px; border-radius:5px; letter-spacing:.5px;
+  .hud-stat { display: flex; align-items: center; gap: 10px; }
+  .stat-icon { 
+    width: 32px; height: 32px; background: var(--rl-teal-pale); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: var(--rl-teal);
   }
-  .level-label { font-size:12px; color:var(--rl-gray-600); font-weight:500; }
-  .hud-right { display:flex; gap:10px; }
-  .hud-stat {
-    display:flex; align-items:center; gap:5px;
-    background:var(--rl-teal-faint); border:1px solid var(--rl-teal-pale);
-    padding:5px 12px; border-radius:7px;
-  }
-  .hud-stat svg { width:13px;height:13px;stroke:var(--rl-teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
-  .hud-stat .hs-val {
-    font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; color:var(--rl-teal-dark);
-  }
-  .hud-stat .hs-lbl { font-size:9px; color:var(--rl-gray-400); text-transform:uppercase; letter-spacing:.5px; font-weight:500; }
+  .stat-info { display: flex; flex-direction: column; }
+  .stat-label { font-size: 10px; text-transform: uppercase; color: var(--rl-gray-400); font-weight: 700; letter-spacing: 0.5px; }
+  .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: var(--rl-text); }
 
-  /* GAME CANVAS AREA */
-  .game-area {
-    position:relative;
-    max-width:900px; margin:16px auto 0;
-    padding:0 16px;
+  /* GAME AREA */
+  .game-wrapper {
+    max-width: 800px; margin: 24px auto 0; padding: 0 16px; position: relative; z-index: 5;
   }
   .lab-bench {
-    position:relative;
-    background:linear-gradient(180deg,#f5f7f8,#ebeef0);
-    border:2px solid var(--rl-gray-200);
-    border-radius:16px;
-    padding:24px 12px 20px;
-    overflow:hidden;
-    cursor:none;
-    min-height:420px;
-    touch-action:none;
+    background: #eef2f3; border: 1px solid #dce4e6;
+    border-radius: 16px; padding: 30px;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.03);
+    position: relative; cursor: none;
+    min-height: 400px; touch-action: none;
   }
-  .bench-label {
-    position:absolute; top:-11px; left:20px; background:var(--rl-white);
-    padding:0 8px; font-family:'IBM Plex Mono',monospace; font-size:10px;
-    font-weight:600; color:var(--rl-gray-400); letter-spacing:1px; text-transform:uppercase;
-  }
-
-  /* Microplate visual */
+  
   .microplate {
-    display:grid;
-    grid-template-columns:repeat(var(--cols),1fr);
-    gap:clamp(8px,1.5vw,14px);
-    max-width:700px;
-    margin:0 auto;
-    padding:20px;
-    background:var(--rl-white);
-    border-radius:12px;
-    border:2px solid var(--rl-gray-200);
-    box-shadow:0 2px 16px rgba(0,72,81,.05);
-    position:relative;
+    display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr);
+    gap: 16px; max-width: 500px; margin: 0 auto;
+    background: var(--rl-white); padding: 20px; border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--rl-gray-200);
   }
 
-  /* Well */
-  .well-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .well-name {
-    font-family:'IBM Plex Mono',monospace; font-size:clamp(7px,1.2vw,9px);
-    font-weight:600; color:var(--rl-gray-400); letter-spacing:.3px; text-align:center;
-    line-height:1.2; min-height:20px; display:flex; align-items:center;
-  }
+  .well-container { text-align: center; }
+  .well-label { font-size: 10px; font-weight: 600; color: var(--rl-gray-400); margin-bottom: 6px; letter-spacing: 0.5px; }
   .well {
-    width:clamp(48px,9vw,72px); height:clamp(90px,16vw,130px);
-    background:linear-gradient(180deg,#f0f3f5,#e4e8ea);
-    border:2px solid var(--rl-gray-200); border-radius:6px 6px 50% 50% / 6px 6px 35% 35%;
-    position:relative; overflow:hidden; transition:border-color .2s,box-shadow .2s;
+    width: 100%; aspect-ratio: 1/2.2; max-width: 60px; margin: 0 auto;
+    background: linear-gradient(to right, #dbe4e8, #f0f4f5 40%, #f0f4f5 60%, #dbe4e8);
+    border-radius: 0 0 30px 30px;
+    position: relative; overflow: hidden;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px 0 5px rgba(255,255,255,0.8);
+    border: 1px solid rgba(0,0,0,0.05); border-top: none;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  .well.hover { border-color:var(--rl-teal-light); box-shadow:0 0 0 3px rgba(56,163,165,.15); }
-  .well.filling { border-color:var(--rl-teal); box-shadow:0 0 0 4px rgba(0,107,107,.18); }
-  .well.done { pointer-events:none; }
+  .well::before {
+    content:''; position: absolute; top:0; left:0; right:0; height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent 30%, transparent 70%, rgba(255,255,255,0.4));
+    pointer-events: none; z-index: 4;
+  }
+  .well.hover { box-shadow: 0 0 0 3px var(--rl-teal-light); transform: scale(1.02); }
+  
+  .liquid {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 0%;
+    background: linear-gradient(to bottom, var(--rl-liquid), var(--rl-liquid-dark));
+    transition: height 0.05s linear; z-index: 2;
+  }
+  .liquid.overfilled { background: linear-gradient(to bottom, #ef5350, #c62828); }
+  .liquid::after {
+    content: ''; position: absolute; top: -5px; left: -50%; width: 200%; height: 10px;
+    background: rgba(255,255,255,0.3); border-radius: 50%;
+    animation: wave 2s infinite linear;
+  }
+  @keyframes wave { 0% { transform: translateX(0); } 100% { transform: translateX(-50px); } }
 
-  .well.result-perfect { border-color:var(--rl-success); box-shadow:0 0 0 3px rgba(56,163,90,.18); }
-  .well.result-good { border-color:var(--rl-teal-light); box-shadow:0 0 0 3px rgba(56,163,165,.12); }
-  .well.result-ok { border-color:var(--rl-warning); box-shadow:0 0 0 3px rgba(232,168,56,.12); }
-  .well.result-bad { border-color:var(--rl-danger); box-shadow:0 0 0 3px rgba(214,69,69,.12); }
-
-  /* Liquid inside well */
-  .well-liquid {
-    position:absolute; bottom:0; left:0; right:0;
-    background:linear-gradient(180deg,rgba(91,192,235,.65),rgba(42,139,181,.85));
-    border-radius:0 0 46% 46% / 0 0 32% 32%;
-    transition:height .04s linear;
+  .target-line {
+    position: absolute; left: 0; right: 0; height: 0px;
+    border-top: 2px dashed var(--rl-danger); z-index: 3; opacity: 0.6;
   }
-  .well-liquid::before {
-    content:''; position:absolute; top:-2px; left:8%; right:8%; height:4px;
-    background:rgba(255,255,255,.3); border-radius:50%;
-  }
-
-  /* Target line */
-  .well-target {
-    position:absolute; left:3px; right:3px; height:0;
-    border-top:2px dashed var(--rl-danger); opacity:.55;
-  }
-  .well-target-label {
-    position:absolute; right:1px; top:-12px;
-    font-family:'IBM Plex Mono',monospace; font-size:6px; font-weight:600;
-    color:var(--rl-danger); letter-spacing:.3px; opacity:.7;
-  }
-
-  /* Score popup on well */
-  .well-popup {
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    font-family:'IBM Plex Mono',monospace; font-size:clamp(10px,1.8vw,13px); font-weight:700;
-    padding:3px 8px; border-radius:5px; white-space:nowrap;
-    opacity:0; pointer-events:none; z-index:5;
-  }
-  .well-popup.show { animation:popUp 1.6s ease-out forwards; }
-  .well-popup.perfect { background:#dcfce7; color:var(--rl-success); }
-  .well-popup.good { background:var(--rl-teal-pale); color:var(--rl-teal); }
-  .well-popup.ok { background:#fef3c7; color:#b45309; }
-  .well-popup.bad { background:#fde2e2; color:var(--rl-danger); }
-  @keyframes popUp {
-    0%{opacity:0;transform:translate(-50%,-50%) scale(.7);}
-    12%{opacity:1;transform:translate(-50%,-60%) scale(1.1);}
-    25%{transform:translate(-50%,-65%) scale(1);}
-    75%{opacity:1;}
-    100%{opacity:0;transform:translate(-50%,-90%) scale(.9);}
+  .target-line::after {
+    content: 'TARGET'; position: absolute; right: 2px; bottom: 2px;
+    font-size: 7px; color: var(--rl-danger); font-weight: 800;
   }
 
-  /* PIPETTE (follows cursor) */
-  .pipette {
-    position:fixed; pointer-events:none; z-index:100;
-    transform:translate(-50%,-100%);
-    transition:opacity .15s;
-    filter:drop-shadow(0 6px 16px rgba(0,0,0,.15));
+  .score-pop {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    background: var(--rl-white); padding: 4px 12px; border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+    pointer-events: none; z-index: 10; opacity: 0;
   }
-  .pipette.hidden { opacity:0; }
-
-  /* Drip particles */
-  .drip {
-    position:fixed; pointer-events:none; z-index:99;
-    width:5px; height:7px;
-    background:var(--rl-liquid);
-    border-radius:50% 50% 50% 50% / 30% 30% 70% 70%;
-    opacity:.85;
+  .score-pop.anim { animation: popUp 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  @keyframes popUp { 
+    0% { transform: translate(-50%, -20%) scale(0.5); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -100%); opacity: 0; }
   }
 
-  /* Splash inside well */
-  .splash {
-    position:absolute; border-radius:50%; pointer-events:none;
-    background:rgba(91,192,235,.4); z-index:3;
-    animation:splash .4s ease-out forwards;
+  /* PIPETTE */
+  .pipette-cursor {
+    position: fixed; pointer-events: none; z-index: 999;
+    width: 60px; height: 180px;
+    transform: translate(-50%, -95%) rotate(-5deg);
+    transition: transform 0.1s;
+    filter: drop-shadow(4px 8px 6px rgba(0,0,0,0.2));
   }
-  @keyframes splash {
-    0%{transform:scale(0);opacity:.8;}
-    100%{transform:scale(2.5);opacity:0;}
-  }
+  .pipette-cursor.hidden { opacity: 0; }
+  .pipette-cursor.active { transform: translate(-50%, -93%) rotate(-5deg) scale(0.98); }
+  
+  .pip-body { fill: #CFD8DC; }
+  .pip-grip { fill: var(--rl-teal-dark); }
+  .pip-plunger { fill: #90A4AE; transition: transform 0.1s; }
+  .pipette-cursor.active .pip-plunger { transform: translateY(8px); }
+  .pip-tip { fill: rgba(255,255,255,0.8); stroke: rgba(0,0,0,0.1); }
+  .pip-fluid { fill: var(--rl-liquid); opacity: 0.8; }
 
-  /* FOOTER BAR */
-  .game-footer {
-    max-width:900px; margin:16px auto 0; padding:0 16px 32px;
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
-  }
-  .game-footer .hint { font-size:12px; color:var(--rl-gray-400); }
-  .game-footer .hint strong { color:var(--rl-teal); }
-  .btn {
-    display:inline-flex; align-items:center; gap:5px; padding:8px 18px;
-    border:none; border-radius:7px; font-family:'Outfit',sans-serif;
-    font-size:12px; font-weight:600; cursor:pointer; transition:all .2s;
-  }
-  .btn svg { width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
-  .btn-s { background:var(--rl-teal-faint); border:1px solid var(--rl-teal-pale); color:var(--rl-teal-dark); }
-  .btn-s:hover { background:var(--rl-teal-pale); }
-  .btn-p { background:linear-gradient(135deg,var(--rl-teal-dark),var(--rl-teal)); color:#fff; box-shadow:0 3px 12px rgba(0,72,81,.2); }
-  .btn-p:hover { transform:translateY(-1px); }
-
-  /* Page footer */
-  .page-footer-brand { border-top:1px solid var(--rl-gray-200); }
-  .pf-top {
-    padding:12px 32px; display:flex; align-items:center;
-  }
-  .pf-back {
-    display:inline-flex; align-items:center; gap:5px;
-    text-decoration:none; color:var(--rl-teal); font-size:12px; font-weight:600;
-  }
-  .pf-bottom {
-    background:var(--rl-teal-dark); padding:32px; display:flex;
-    align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:24px;
-  }
-  .pf-logo-area { flex-shrink:0; }
-  .pf-address {
-    font-size:12px; color:rgba(255,255,255,.7); line-height:1.6;
-  }
-  .pf-address strong { color:rgba(255,255,255,.95); font-weight:600; font-size:13px; }
-  .pf-mission {
-    font-size:12px; color:rgba(255,255,255,.6); font-weight:500;
-    text-align:right; line-height:1.5;
-  }
-  @media(max-width:600px){
-    .pf-bottom { flex-direction:column; align-items:flex-start; }
-    .pf-mission { text-align:left; }
-  }
-
-  /* Level overlay */
+  /* OVERLAYS */
   .overlay {
-    position:fixed; inset:0; background:rgba(0,72,81,.82); backdrop-filter:blur(14px);
-    display:flex; align-items:center; justify-content:center;
-    z-index:300; opacity:0; pointer-events:none; transition:opacity .4s;
+    position: absolute; inset: 0; background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px); border-radius: 16px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 20; transition: opacity 0.3s;
   }
-  .overlay.active { opacity:1; pointer-events:all; }
-  .overlay-card {
-    background:#fff; border-radius:20px; padding:40px 32px; text-align:center;
-    max-width:380px; width:90%; box-shadow:0 32px 80px rgba(0,0,0,.25);
-    transform:scale(.92); transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  .overlay.hidden { opacity: 0; pointer-events: none; }
+  .btn {
+    background: var(--rl-teal); color: white; border: none; padding: 12px 24px;
+    border-radius: 6px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,107,107,0.3); transition: transform 0.2s, background 0.2s;
   }
-  .overlay.active .overlay-card { transform:scale(1); }
-  .overlay-card .oc-icon { font-size:44px; margin-bottom:12px; }
-  .overlay-card h2 { font-size:20px; font-weight:700; color:var(--rl-teal-dark); margin-bottom:4px; }
-  .overlay-card p { font-size:12px; color:var(--rl-gray-400); line-height:1.5; margin-bottom:20px; }
-  .oc-score {
-    font-family:'IBM Plex Mono',monospace; font-size:40px; font-weight:700;
-    color:var(--rl-teal-dark); line-height:1;
-  }
-  .oc-score-label { font-size:10px; color:var(--rl-gray-400); text-transform:uppercase; letter-spacing:1px; margin-bottom:24px; }
-  .oc-btns { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+  .btn:hover { background: var(--rl-teal-dark); transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
 
-  /* Start overlay */
-  .start-overlay {
-    position:absolute; inset:0; background:rgba(255,255,255,.92); backdrop-filter:blur(6px);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    border-radius:14px; z-index:10; transition:opacity .4s;
+  /* FOOTER */
+  .page-footer {
+    margin-top: 40px; padding: 30px; background: var(--rl-white);
+    border-top: 1px solid var(--rl-gray-200); text-align: center;
   }
-  .start-overlay.hidden { opacity:0; pointer-events:none; }
-  .start-overlay .so-icon { font-size:40px; margin-bottom:10px; }
-  .start-overlay h3 { font-size:16px; font-weight:700; color:var(--rl-teal-dark); margin-bottom:4px; }
-  .start-overlay p { font-size:12px; color:var(--rl-gray-400); margin-bottom:16px; max-width:300px; text-align:center; line-height:1.5; }
+  .back-link {
+    color: var(--rl-teal); text-decoration: none; font-weight: 600; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .back-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<div class="bg-pattern"></div>
+
 <nav class="navbar">
   <div class="navbar-logo">
-    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABzAMkDASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAYHBAUIAwIBCf/EAEcQAAECBQMBBgIFBwcNAAAAAAECAwAEBQYRBxIhMQgTQVFhcSKBFBYydZEjN1aVsrPSFUJSgqGx8BgkOFNiY3KSlKPC0eH/xAAaAQEAAwEBAQAAAAAAAAAAAAAAAQIDBAUG/8QAMBEAAgIBAwIDBQgDAAAAAAAAAAECAxEEEiExQQUTIjJRUnGRMzRhgaGxweHR8PH/2gAMAwEAAhEDEQA/AOy4QhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIRh1upSlIpb9RnXNjLKcnzJ8APUniIvp5fKLmmJiTmmG5WbRlbSEqJC2/n4jx8+sSotrJnK2EZKDfLJpCEIg0EIQgBCEIAQhCAEIRFtTL5pNgUFis1mXnn5d6aTLJTKISpYUUrUCQpSRjCD4+USk28IpOca4uUnhIlMIpMdpewyQDSrkHqZZnj/uxYOnuoNr31LOOUGeKnmRl2WeTsebGcAlPiPUEiLSrnFZaMKtbRbLbCabJXCEIodQhCEAIQhACEIQAhCEAIQiGarXR/INF+iSjoFQnAUt4PLaP5y/TyHr7GJSy8FLLFXFyZBdYLoNVqv8jybmZKTWQsg8Ou9CfYcgfP0iF0qfmaZUWJ+UcKHmFhaSPHHgfQxiwjqUUlg+estlOe99Tpi16zLV6iS9SliAHBhxGeULHVJ/x0xGzim9C5iqprMxLMMqcpq0bphR+y2rHwkep6Y8ufCLkjmnHa8Hu6a121qTEIQipuIQhACEIQAik+2V+bCm/fTX7h+Lsik+2V+bCm/fTX7h+NaftEcPiX3WfyN5pUxYp0yt41Bm3C+ac135fSzv3bRndnnPnmKmtFVEb7VzH1DU2qkLWsLEqPyAHcHvAnw2bunhnpxiPSU0Hp1S0fYuilT9Serj9NRONyyigtLVgKKAAndkjIHPXESHslvUFVl1s02SaYuaXSoTEwTuW62QVNkA9ACCCAMEpBOciN+IqTTz2PKXmW2U1zio4xJPu8dje3nroJO6Zi27Ntebuaclt6X1sqVtCk/aCUoSorA8VcD36xs9KNZJK8a47blVpD1CraM7Jd1ZUHNoyocpSUqA52kfOIT2K25YyVzPkJM2XWEqUeVbMLI+Wc/wCMRrtV9jHavtpdMSn6Qp+Q+khA53FzCt2P93jJ8oh1w3OGOnc0jq9Qq4aly4k8bcds469ck0vjXZu1dQ6har1sPTqJXYlt5iZ/KOuLaSpKQjb/AElBPXpzgn4Y1cj2h3pCuin3rZM/QmljIVlRdQPDLa0JJGfEfgY08q02721ng4hKwlRUkEZwRI8H5Rk9tdtv6BbDuxPed7MJ3Y5xhvjPlBQhmMcdUVs1OpVdtynxGTWMLpn+z1nu0PXW2xVmNOpxNBLm1M286tIcTnAO8I2AnyyrnjJi26ff9tzmnqr5TNqbpKGi46VJ+NtQO0oKR/O3YAHjkeBjW6mSsu3oVWJVLLfcs0QhtG0bU7WxtwOgxgY8sRzyhx//ACTVpQpZR9ZNqwOgTsBx7bsH3iqhCa4WOTaepv0s2py3elvpjn8uxPx2grjnUvVOkacTkzRGFEOTO9xWAOcqUlBSngZI5x5xZNn6mUa67FqVzUppwO02XccmZN0gLQpKCoDI8Dg4PvFV6XTetY0+pCLYpdsu0YMESynSkKUncc7gFjndnPHXOeY9NL9PbusmhX1M1+UlJaVnqK8EJZeSv40pWQAB0ACjEzhDn/JTT6nVZi3lprnMcJccYZkU/tHTNSp5TTbEm52q94r/ADaXmFOJQyEg94SG85zkYx0BOR0NqaUXfN3ta4rM3QJqjK71TQQ8rclzbwVIOAcZyOR1BHOIq7sWy7KbZr82G098udbbUvHJSlGQM+6j+MX/ABS7bFuKR1+HO+2uN1k8p9sL9zFq0/LUumv1CcXsYYQVrPj7D1J4HvHONz1mar1afqU0TucOEIzw2gfZSPb+3kxZOrhuKszjVHpdJn3JJkhbjiWVbXV+/TA/vz5CI1R9MbknkhcyliQQf9cvKvwTn+3EK8RWWV1bsulsguEQiJhY1iVG4VomZgLk6b1LxT8TnogHr79PfpFi2xptQqSQ9Og1SYHRTyMNj2RyPxJ+USS4a3Sbdpa5+qzbUrLoGE5PKjj7KR1J9BCVmeIirQ7fVa+D9kpWlW5RS20GZKRlkFa1qOAABypRPj6mNZYV4U+8Zafmac24hmVmiwkrPLidoIXj+aDk4B8vkOe9UNSaneLypRkLkqOheW5cH4ncHhThHU+OOg9esWP2W2HE25WJoj8m5NpbSfVKMn9oREq9scvqWq1qtvVda9JcMI8paal5kuiXeQ6WXC04EnOxYwSk+R5H4x6xiennIhCEAIQhACK/14sWo6g2hK0amTkrKvMz6JpS5jdtKQ24nHwgnOVj8IsCKd7W1TqVL03kH6ZUJuRdXV2kKXLvKbUpPcvHaSkjIyAcegjSrO9YOXXOC083NZWCyLDo79vWZR6HMutuvSMm2w4tvO1SkpAJGecRW1D0mrVtayPXfblUkJejzTyjMSSysLLa8FxAAG0gK+JPOBgeUTvSSYfmtMLbmZp9199ymsqW44sqUo7RySeSYlBIAJJAA5JMN0otojyK7oQbXTDX4FDXNolcdNuyZuLTS5mqMubUrvZdxa2ggKUCUpUkK3IzztI4x7Y2ulGjU7QrsVeV51wVqugktbFLWhCinbvUteCs7TgDACfXjFrs1ekvTP0ZmqSLj+cd0mYSVZ6dM5iv+05Pz1O0lnZmnzszJviZYAdYdU2rBWMjIOYurJy9PvOazSaalO9LO3nGeM/Ix5XTGqta/vairqEl9AVnbLjd3vMuGueMdeeseuv+m1U1Fk6QzS5+TlFSLjqlmZ3YUFhIGNoP9GNho5XZZrSS3Juu1llD70sSXZyZAU4d5HVRyfAfhE/bWhxtLja0rQoApUk5BB6EGKucoyz7uDWvT020uOOJ+p8+/k0N4UJ+tWDUrdl3mm35qQVKocXnYFFGATjnEQ3T7SpNL0nqFi3NMMTjc7MOOqclSfgyEbSCofaBQD0ixJ2r0qRfQxO1OSlnl4CG3n0oUrPTAJyehjWXlL1CqURDVHfGHVAlxshXw+eMgLTjIKcgnIIIxERlJLBrbTXKW9rLSxj8ClKbo5q1bQep1qX9KS9LcJICn3WiCcZOwIUEq9QfCLCsLTSdtmw67RJi45qqT9Zad7xx9Su5bcWhQKkpJJySrKldVYHHETa1mqkxQJRqrrK55KPyxK95Ks8/F0PyAHhiNnEytk+DKjQU14kk+ndvjJW2gen1T08oVRp9UnZOacmpoPIVLFWAkIA53Ac5BiyY8KhOS1PkX56ceSzLS7anHXFdEpAyTHL916o3TU7gm5um1ebkJJS8S8u0raEoHAz/ALR6n1J8MQUZWtsTuq0NcYL8jqeNZXLhodDQFVeqyclnGEuugKPsnqY5LnbwuudSUzVx1ZxB6oM2sJPyBxGkUoqUVKJKickk8mNFp/ezkn4v8EfqX5dmusgwXJe2qaucVghM1MkobB8wj7Sh7lMUrcdeq9w1BU9WJ52aeJONx+FA8kp6JHoI1kI2jCMeh5l+qtv9t8H002466hppCnHFqCUpSMlRPQAeJjr/AE2t0WvZkhSFY+kIR3kyQQcuq5VyOoBOAfICKw0F05dbeZuyusFGAF0+XXkKz4OqH7IPnnyiWdoS9GrO08my04BUqklUpJJ8QVDC1/1Ukn32jxjGyW+Sgj09FUtNVLUWccfp/ZTWmWrCKTrVXlTs0FW/Xqk7lwkbWTvIadz5bcJPpg84EdVR/N6Ou+y9qH9ZrbNtVN0qqtKbAQtXV9jOEn3Twk+m31i+ppwtyOXwbxByk6bH15X8ouaEIRxn0ghCEAIpPtlfmwpv301+4fi7IpPtlfmwpv301+4fjWn7RHD4l91n8if6Nfmotf7sY/YEemqlvyFzWVOUup1lyjShKVuTaXQ2lCQeQrJAKSCRg8cg+EU3YPaBtS37Ko9Dm6RW3JiRk22HFtNtFClJTgkZWDj5R59pOvzF46RW1c1FYm2qJMTbipht1IC0rGUIK9pIAylzx8U+PEX8qXmc8cnK9dQ9I1H1NR5X6EavyytGqfa8+9bV9PP1mVRvl0LmkOpeUMZT8KBkkZwQepHhxG1qtbnq52RO+qL7sw/LT6JbvHFZUpKXBt568Agc+UYN01vRBWn0zK2pbTztcdlSGgphxTksrblTi1qOMJGTkZ6eA5jxk/8ARAnPvoftojfnCznr3PKzFSmobcOD9nOP+m3090Gl7s08k65VrhnmqhNy26RQjC2mG+dgUCMkdDgFOMmPTsy3DcMlI3haqHFzD1OknZmQZJ3Bt5BUkpT6KUU8dOOnJjJ0z13oNs6ayVHrNMqJqdPl+7l0NNju5lOTsO4n4eOpwehIz0jG7MrFRp8tdupE3S5uYYWytLDMu0VLmV7ytYbHiAQkZ88+Rist22W78janyFZS6Hzh7vp3/wB/ggem6NNa2qpTeqFfrDNWde/JrG9SVJwPiKkoUd+cjBwMY+XRWgVAtii0afXa12zFwSMw8FISt3iWSBwkoGMKJySSBkY4GOauc1C0Tudp+bu+xnKdVjuLwl2yS4rxIWgoJV6qA58Y9uyRSJ5V6164pCSmJW23GHGJfviTuUXUqQkHoopSlQJ8M+sLcyi28r9idC4V3QjHbLOeVnPzZ0vCERDVi70Wfark21gz8wSzJpIyN+PtH0SOfU4HjHGk28I+jsnGuLlLoite0Zevfvi0Ka8e7aUFz60K4Urqlv2HU+uPIxSsfb7rr77j7zinHXFFa1qOSpROSSfOPlCVLUEoSVKPQAZJjvhFRWD5TUXSvsc2fkIkdDsW7q0oCQoE6pJOO8cR3SP+ZeBFj2xoPNuLQ9cdWbZbyCpiTG5ZHkVqGAfYKiJWRj1ZNWkut9mJTtOkZyozrclISzszMunCGmklSlH2EX3pbo+zS1t1a6ktTM4khTUmDubaPmo9Fq9Og9fCxrWtag2zK9xRqc1LkjC3cbnHP+JR5PTp09IiuqOrtrWM05LOPipVgJOyRl1glKvDvFdED3yryBjB2Sm9sT1atFTpY+Ze+n0/sld6XNSLRt+YrVamUsy7I4Tkb3VeCEDxUf8A70EcRapXvUr9ul2sT2WmUju5SWCspYbHgPMnqT4k+QAHlqJfNwX1WTUa3M5SjIl5ZvIZYSfBKfPzJ5OBk8CIzHVTR5fL6nh+JeJvVPZDiK/URt7NuGo2rcslXqWsJmZRzcAfsrSeFJV6EEg+8aiEbtZ4PLjJxakuqP6E2ZcNPuu2ZGv0xe6Xm29wSTyhXRSD6ggj5RuI5E7LeoDtu3Ui155a10usPJbaGc9zMnCUqA8lcJP9U+BjruPLtr8uWD7vw/WLVUqffv8AMQhCMjtEY8/IyVQYDE/Jy820Fbgh5sLTnzwfHmMiECGs9TU/Vi2v0epP/RN/+oz0SUm3JfQUSjCZXbt7gNgN7fLb0xHvCJyyFCK6I1UhbduyCX0yFApUqmYSUvBmTbQHEnqFYHIPrGQKTShTzTxTJISZOTL9wnuyc5ztxjrzGbCGWFCK6I1U7bduzzTTM7QKVMtsjDSHpNtYQPIAjj5RsmWmmGksstobbQMJQhIASPIAdI+4QyFFJ5SNdOUKhzs0Juco1OmZgdHXZVC1j5kZjOZaaYaSyy2httAwlCEgBI8gB0j7hEZJUUuUhGLUqdT6mwGKlIys6yDuDcw0lxOfPCgRGVCAaT4ZpW7StRs5btmioPmmQaH/AIxsZKQkZIYkpKWlhjGGWko/uEZMInLIUIrohCEIgsfi0pWkoWkKSoYIIyCIjpsGxSSTZdtknkk0tn+GJHCJTa6FZQjL2lkjf1AsT9Crb/VbH8MPqBYn6FW3+q2P4YkkIndL3lPJr+FfQjf1AsT9Crb/AFWx/DD6gWJ+hVt/qtj+GJJCG6XvHk1/CvoaKn2baFPm25yQtWhSky0ctvMU9pC0HzCgnIjewhENt9S8YRjxFYEIQiCwhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAf//Z" alt="Romer Labs" style="height:36px;width:auto;">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAyCAMAAACJ3FxJAAAAbFBMVEX///8AAAD8/PwkJCT4+PjDw8P09PTMzMzX19fHx8fLy8uDg4OZmZnS0tJqamqJiYlxcXFQUFCvr6+SkpJoaGienp5dXV1ISEh/f39ycnJOTk5gYGBsbGxYWFhKSkpCQkJDQ0N6enp3d3ePj49q39nOAAAA8ElEQVRYhe3X2xKCIBAGYI1S8pJala3u/37rsCACIootZub/0uk4w5tBFhHEQYcOHTp06NChQ4cO/xVGlmU6570xJjDG+L5/WlU1xphS2jAM57quKaWUZRmCcM5FUSilPM97W5Z1zO3btt23bfv1gGGY53n/jHmeP97LsjzL4x8Yx3G/3z8W27b9x/Z9/3gfhuE51nXd8zAMr7Gu616H53mvMc/z16H3/T3Wdd2HMea1l1L6Mca89lJKP8aY115K6ccY89pLKf0YY157KaUfY8xrL6X0Y4x57aWUfowxr72U0o8x5rWXUvoxxrz2U0o8x5rWXUvoxxrz2Uko/xvgH9wcF8hQc+1vO/QAAAABJRU5ErkJggg==" alt="Romer Labs" style="height: 32px; filter: brightness(0.2);">
   </div>
   <ul class="nav-links">
-    <li><a href="#">Solutions</a></li>
-    <li><a href="#">Products</a></li>
-    <li><a href="#">About</a></li>
+    <li><a href="/">Products</a></li>
+    <li><a href="/">Services</a></li>
+    <li><a href="/">Knowledge Center</a></li>
+    <li><a href="/">Contact</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="error-tag"><span class="blink"></span><span>Diagnostic Report</span></div>
-    <h1>404</h1>
-    <h2>Sample Not Found</h2>
-    <p>Test your pipetting precision while we locate your sample!</p>
-  </div>
+  <div class="error-code">404</div>
+  <h2>Sample Not Found</h2>
+  <p>The page you are looking for has been moved or deleted.<br>While we search for it, please ensure our sample precision is up to standards.</p>
 </section>
 
-<!-- HUD -->
-<div class="hud">
-  <div class="hud-left">
-    <div class="level-tag" id="lvlTag">LEVEL 1/3</div>
-    <div class="level-label" id="lvlLabel">Warm-up · ±15%</div>
-  </div>
-  <div class="hud-right">
+<div class="hud-container">
+  <div class="hud">
     <div class="hud-stat">
-      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg>
-      <div><div class="hs-lbl">Score</div><div class="hs-val" id="hScore">0</div></div>
+      <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
+      <div class="stat-info">
+        <span class="stat-label">Level</span>
+        <span class="stat-value" id="dispLvl">1/3</span>
+      </div>
     </div>
     <div class="hud-stat">
-      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <div><div class="hs-lbl">Wells</div><div class="hs-val" id="hWells">0/6</div></div>
+      <div class="stat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div class="stat-info">
+        <span class="stat-label">Precision Score</span>
+        <span class="stat-value" id="dispScore">0</span>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- GAME AREA -->
-<div class="game-area">
+<div class="game-wrapper">
   <div class="lab-bench" id="bench">
-    <div class="bench-label">96-Well ELISA Microplate</div>
+    <div class="overlay" id="startOverlay">
+      <h2 style="color:var(--rl-teal-dark); margin-bottom:8px;">Ready for Analysis?</h2>
+      <p style="color:var(--rl-gray-400); margin-bottom:24px; text-align:center;">
+        Fill the wells exactly to the <strong style="color:var(--rl-danger)">dashed red line</strong>.<br>
+        <strong>Click & Hold</strong> to dispense.
+      </p>
+      <button class="btn" id="startBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Load Samples
+      </button>
+    </div>
+
+    <div class="overlay hidden" id="endOverlay">
+      <div style="font-size:40px; margin-bottom:10px;">🧪</div>
+      <h2 id="endTitle" style="color:var(--rl-teal-dark); margin-bottom:8px;">Analysis Complete</h2>
+      <p id="endDesc" style="color:var(--rl-gray-600); margin-bottom:20px; text-align:center;">Score: 0</p>
+      <div style="display:flex; gap:10px;">
+        <button class="btn" id="resetBtn">Try Again</button>
+        <a href="/" class="btn" style="background:var(--rl-gray-200); color:var(--rl-text);">Go Home</a>
+      </div>
+    </div>
+
     <div class="microplate" id="plate"></div>
-    <div class="start-overlay" id="startOverlay">
-      <div class="so-icon">🧪</div>
-      <h3>Pipette Precision</h3>
-      <p>Move the pipette over the wells. <strong>Click & hold</strong> to dispense liquid. Fill each well to the <strong style="color:var(--rl-danger)">target line</strong>!</p>
-      <button class="btn btn-p" onclick="startGame()">
-        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Start
-      </button>
-    </div>
   </div>
 </div>
 
-<!-- GAME FOOTER -->
-<div class="game-footer">
-  <div class="hint">Move pipette over wells · <strong>Hold to dispense</strong> · Release to stop</div>
-  <button class="btn btn-s" onclick="resetGame()">
-    <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-    Restart
-  </button>
-</div>
-
-<footer class="page-footer-brand">
-  <div class="pf-top">
-    <a href="/" class="pf-back"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back to Homepage</a>
-  </div>
-  <div class="pf-bottom">
-    <div class="pf-logo-area">
-      <img src="data:image/png;base64,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" alt="Romer Labs" style="height:32px;width:auto;filter:brightness(0) invert(1);opacity:.9;">
-    </div>
-    <div class="pf-address">
-      <strong>Romer Labs Division Holding GmbH</strong><br>
-      Technopark 5<br>
-      3430 Tulln, Austria
-    </div>
-    <div class="pf-mission">Making the World's Food Safer®<br><span style="opacity:.5;font-size:10px;">a dsm-firmenich company</span></div>
-  </div>
-</footer>
-
-<!-- LEVEL OVERLAY -->
-<div class="overlay" id="overlay">
-  <div class="overlay-card">
-    <div class="oc-icon" id="ocIcon">🏆</div>
-    <h2 id="ocTitle">Level Complete!</h2>
-    <p id="ocText">Great precision!</p>
-    <div class="oc-score" id="ocScore">0</div>
-    <div class="oc-score-label">Total Score</div>
-    <div class="oc-btns">
-      <button class="btn btn-p" id="nextBtn" onclick="nextLevel()">
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>Next Level
-      </button>
-      <button class="btn btn-s" onclick="resetGame()">
-        <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Again
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- PIPETTE CURSOR -->
-<div class="pipette hidden" id="pipette">
-  <svg width="40" height="120" viewBox="0 0 40 120" fill="none">
-    <!-- Plunger button -->
-    <rect x="14" y="0" width="12" height="8" rx="3" fill="#6B7D82"/>
-    <!-- Plunger rod -->
-    <rect x="18" y="8" width="4" height="20" rx="1" fill="#8A9A9E"/>
-    <!-- Body top -->
-    <rect x="12" y="26" width="16" height="8" rx="3" fill="#B0BEC5"/>
-    <!-- Body main -->
-    <rect x="10" y="32" width="20" height="50" rx="4" fill="#CFD8DC"/>
-    <!-- Volume window -->
-    <rect x="14" y="38" width="12" height="18" rx="2" fill="#E8F0F2" stroke="#B0BEC5" stroke-width=".5"/>
-    <text x="20" y="50" text-anchor="middle" font-family="monospace" font-size="6" fill="#4A5C60" font-weight="600" id="pipVol">100µL</text>
-    <!-- Brand ring -->
-    <rect x="10" y="60" width="20" height="4" rx="1" fill="#006B6B"/>
-    <!-- Body bottom / grip -->
-    <rect x="13" y="82" width="14" height="12" rx="2" fill="#B0BEC5"/>
-    <!-- Tip holder -->
-    <path d="M16 94h8l-1 10h-6l-1-10z" fill="#90A4AE"/>
-    <!-- Tip -->
-    <path d="M17 104h6l-1.5 14a1.5 1.5 0 01-1.5 1.2h0a1.5 1.5 0 01-1.5-1.2L17 104z" fill="#E8EDF0" stroke="#B0BEC5" stroke-width=".5"/>
-    <!-- Tip end drip point -->
-    <circle cx="20" cy="119" r="0" fill="var(--rl-liquid)" id="pipDrip"/>
+<div class="pipette-cursor hidden" id="pipCursor">
+  <svg viewBox="0 0 60 180" width="100%" height="100%">
+    <defs>
+      <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#90A4AE"/>
+        <stop offset="50%" stop-color="#CFD8DC"/>
+        <stop offset="100%" stop-color="#90A4AE"/>
+      </linearGradient>
+    </defs>
+    <rect class="pip-plunger" x="25" y="0" width="10" height="40" rx="2" fill="url(#metal)"/>
+    <rect class="pip-plunger" x="20" y="0" width="20" height="8" rx="4" fill="#546E7A"/>
+    <rect class="pip-body" x="15" y="40" width="30" height="80" rx="4" fill="url(#metal)"/>
+    <path class="pip-grip" d="M15 50 C5 50, 5 70, 15 75 Z"/>
+    <rect x="22" y="60" width="16" height="20" fill="#263238"/>
+    <text x="30" y="74" text-anchor="middle" fill="#80CBC4" font-family="monospace" font-size="8">100</text>
+    <rect x="22" y="120" width="16" height="15" fill="#78909C"/>
+    <path class="pip-tip" d="M22 135 L38 135 L32 178 L28 178 Z"/>
+    <path class="pip-fluid" d="M26 150 L34 150 L31 175 L29 175 Z"/>
+    <circle id="pipDrop" cx="30" cy="180" r="0" fill="var(--rl-liquid)"/>
   </svg>
 </div>
 
+<footer class="page-footer">
+  <a href="/" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Return to Romer Labs Homepage
+  </a>
+</footer>
+
 <script>
-const LEVELS = [
-  { name:'Warm-up', tol:15, wells:6, cols:3, speed:.35, tag:'LEVEL 1/3' },
-  { name:'Standard', tol:9, wells:6, cols:3, speed:.55, tag:'LEVEL 2/3' },
-  { name:'Expert', tol:4, wells:8, cols:4, speed:.8, tag:'LEVEL 3/3' },
-];
-const ANALYTES = ['Aflatoxin B1','DON','Zearalenone','Ochratoxin A','Fumonisin B1','T-2 Toxin','Gluten','Soy Protein'];
+// Várakozás a teljes betöltésre
+document.addEventListener('DOMContentLoaded', function() {
+  
+  const Game = {
+    active: false,
+    level: 1,
+    totalScore: 0,
+    maxLevels: 3,
+    fillRate: 0.6,
+    wells: [],
+    currentWellIdx: -1,
+    filling: false,
+    animationFrame: null,
+    
+    config: [
+      { cols: 3, count: 3, tol: 10 },
+      { cols: 3, count: 6, tol: 7 },
+      { cols: 4, count: 8, tol: 4 }
+    ],
 
-let lvl=0, score=0, done=0, total=0;
-let wellData=[], filling=false, activeIdx=-1, raf=null;
-let mouseX=0, mouseY=0, onBench=false, gameStarted=false;
-const pipEl = document.getElementById('pipette');
-const bench = document.getElementById('bench');
-const drip = document.getElementById('pipDrip');
-let drips = [];
+    init() {
+      // Eseménykezelők bekötése itt
+      const startBtn = document.getElementById('startBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const bench = document.getElementById('bench');
+      const pip = document.getElementById('pipCursor');
+      
+      if(startBtn) startBtn.addEventListener('click', () => this.start());
+      if(resetBtn) resetBtn.addEventListener('click', () => this.reset());
 
-// CURSOR → PIPETTE
-function movePipette(x,y){
-  mouseX=x; mouseY=y;
-  pipEl.style.left=x+'px';
-  pipEl.style.top=y+'px';
-}
-document.addEventListener('mousemove',e=>{
-  movePipette(e.clientX,e.clientY);
-  checkHover(e.clientX,e.clientY);
+      document.addEventListener('mousemove', e => {
+        pip.style.left = e.clientX + 'px';
+        pip.style.top = e.clientY + 'px';
+        this.checkHover(e.clientX, e.clientY);
+      });
+
+      document.addEventListener('mousedown', () => {
+        if(!this.active) return;
+        pip.classList.add('active');
+        this.beginFill();
+      });
+
+      document.addEventListener('mouseup', () => {
+        pip.classList.remove('active');
+        this.stopFill();
+      });
+
+      // Touch Events
+      if(bench) {
+        bench.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          if(!this.active) return;
+          pip.classList.remove('hidden');
+          const t = e.touches[0];
+          pip.style.left = t.clientX + 'px';
+          pip.style.top = t.clientY + 'px';
+          pip.classList.add('active');
+          this.checkHover(t.clientX, t.clientY);
+          this.beginFill();
+        }, {passive:false});
+
+        bench.addEventListener('touchend', (e) => {
+          pip.classList.remove('active');
+          this.stopFill();
+        });
+
+        bench.addEventListener('mouseenter', () => { if(this.active) pip.classList.remove('hidden'); });
+        bench.addEventListener('mouseleave', () => { pip.classList.add('hidden'); this.stopFill(); });
+      }
+    },
+
+    start() {
+      this.level = 1;
+      this.totalScore = 0;
+      this.startLevel();
+      document.getElementById('startOverlay').classList.add('hidden');
+      document.getElementById('endOverlay').classList.add('hidden');
+      this.active = true;
+      document.getElementById('pipCursor').classList.remove('hidden');
+    },
+
+    reset() {
+      this.start();
+    },
+
+    startLevel() {
+      const cfg = this.config[this.level - 1];
+      const plate = document.getElementById('plate');
+      plate.style.setProperty('--cols', cfg.cols);
+      plate.innerHTML = '';
+      this.wells = [];
+      document.getElementById('dispLvl').innerText = `${this.level}/${this.maxLevels}`;
+      document.getElementById('dispScore').innerText = this.totalScore;
+
+      const labels = ["Aflatoxin", "DON", "Fumonisin", "Zearalenone", "Ochratoxin", "T-2", "Gluten", "Soy"];
+
+      for (let i = 0; i < cfg.count; i++) {
+        const target = Math.floor(Math.random() * 50) + 30; // 30-80%
+        const div = document.createElement('div');
+        div.className = 'well-container';
+        div.innerHTML = `
+          <div class="well-label">${labels[i % labels.length]}</div>
+          <div class="well" id="w-${i}">
+            <div class="liquid" style="height:0%"></div>
+            <div class="target-line" style="bottom:${target}%"></div>
+            <div class="score-pop" id="sp-${i}"></div>
+          </div>
+        `;
+        plate.appendChild(div);
+        this.wells.push({ id: i, filled: 0, target: target, done: false, el: div.querySelector('.well') });
+      }
+    },
+
+    checkHover(x, y) {
+      if(!this.active) return;
+      this.currentWellIdx = -1;
+      document.querySelectorAll('.well.hover').forEach(el => el.classList.remove('hover'));
+
+      this.wells.forEach((w, idx) => {
+        if (w.done) return;
+        const rect = w.el.getBoundingClientRect();
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom + 50) {
+          w.el.classList.add('hover');
+          this.currentWellIdx = idx;
+        }
+      });
+    },
+
+    beginFill() {
+      if (this.currentWellIdx === -1 || this.wells[this.currentWellIdx].done) return;
+      this.filling = true;
+      this.loop();
+      const drop = document.getElementById('pipDrop');
+      if(drop) drop.setAttribute('r', '4');
+    },
+
+    stopFill() {
+      this.filling = false;
+      cancelAnimationFrame(this.animationFrame);
+      const drop = document.getElementById('pipDrop');
+      if(drop) drop.setAttribute('r', '0');
+      
+      if (this.currentWellIdx !== -1 && !this.wells[this.currentWellIdx].done) {
+        if (this.wells[this.currentWellIdx].filled > 5) {
+          this.scoreWell(this.currentWellIdx);
+        }
+      }
+    },
+
+    loop() {
+      if (!this.filling) return;
+      const w = this.wells[this.currentWellIdx];
+      if (!w) return;
+      
+      const rate = this.fillRate + (this.level * 0.15); 
+      w.filled += rate;
+
+      const liq = w.el.querySelector('.liquid');
+      liq.style.height = w.filled + '%';
+      
+      if(w.filled > w.target + 5) {
+         liq.classList.add('overfilled');
+      }
+
+      if (w.filled >= 100) {
+        w.filled = 100;
+        this.stopFill();
+      } else {
+        this.animationFrame = requestAnimationFrame(() => this.loop());
+      }
+    },
+
+    scoreWell(idx) {
+      const w = this.wells[idx];
+      w.done = true;
+      w.el.classList.remove('hover');
+      
+      const diff = Math.abs(w.target - w.filled);
+      const cfg = this.config[this.level - 1];
+      
+      let pts = 0;
+      let label = "";
+      let color = "";
+
+      if (diff <= cfg.tol) {
+        pts = 100;
+        label = "PERFECT";
+        color = "var(--rl-success)";
+      } else if (diff <= cfg.tol * 2) {
+        pts = 75;
+        label = "GOOD";
+        color = "var(--rl-teal)";
+      } else if (diff <= cfg.tol * 3) {
+        pts = 50;
+        label = "OK";
+        color = "#FBC02D";
+      } else {
+        pts = 10;
+        label = "FAIL";
+        color = "var(--rl-danger)";
+      }
+
+      this.totalScore += pts;
+      document.getElementById('dispScore').innerText = this.totalScore;
+
+      const pop = document.getElementById(`sp-${idx}`);
+      pop.innerText = `${label} +${pts}`;
+      pop.style.color = color;
+      pop.classList.add('anim');
+
+      if (this.wells.every(x => x.done)) {
+        setTimeout(() => this.nextLevel(), 1000);
+      }
+    },
+
+    nextLevel() {
+      if (this.level < this.maxLevels) {
+        this.level++;
+        this.startLevel();
+      } else {
+        this.gameOver();
+      }
+    },
+
+    gameOver() {
+      this.active = false;
+      document.getElementById('pipCursor').classList.add('hidden');
+      const overlay = document.getElementById('endOverlay');
+      overlay.classList.remove('hidden');
+      
+      let msg = "Great precision!";
+      if (this.totalScore < 1000) msg = "Good effort, lab technician!";
+      if (this.totalScore < 500) msg = "Back to training...";
+      
+      document.getElementById('endDesc').innerText = `${msg} Final Score: ${this.totalScore}`;
+    }
+  };
+
+  // Játék indítása
+  Game.init();
 });
-document.addEventListener('touchmove',e=>{
-  if(!gameStarted)return;
-  const t=e.touches[0];
-  movePipette(t.clientX,t.clientY);
-  checkHover(t.clientX,t.clientY);
-},{passive:true});
-
-bench.addEventListener('mouseenter',()=>{onBench=true; if(gameStarted) pipEl.classList.remove('hidden');});
-bench.addEventListener('mouseleave',()=>{onBench=false; pipEl.classList.add('hidden'); clearHovers();});
-
-function clearHovers(){
-  document.querySelectorAll('.well.hover').forEach(w=>w.classList.remove('hover'));
-}
-
-function checkHover(cx,cy){
-  if(!gameStarted)return;
-  clearHovers();
-  const wells = document.querySelectorAll('.well');
-  wells.forEach((w,i)=>{
-    if(wellData[i]&&wellData[i].scored) return;
-    const r=w.getBoundingClientRect();
-    const inX=cx>=r.left-8&&cx<=r.right+8;
-    const inY=cy>=r.top-40&&cy<=r.bottom+8;
-    if(inX&&inY) w.classList.add('hover');
-  });
-}
-
-function getWellUnderCursor(cx,cy){
-  const wells=document.querySelectorAll('.well');
-  let found=-1;
-  wells.forEach((w,i)=>{
-    if(wellData[i]&&wellData[i].scored)return;
-    const r=w.getBoundingClientRect();
-    if(cx>=r.left-8&&cx<=r.right+8&&cy>=r.top-40&&cy<=r.bottom+8) found=i;
-  });
-  return found;
-}
-
-// DISPENSE
-function startDispense(cx,cy){
-  if(!gameStarted)return;
-  const idx=getWellUnderCursor(cx,cy);
-  if(idx<0)return;
-  filling=true;
-  activeIdx=idx;
-  document.querySelectorAll('.well')[idx].classList.add('filling');
-  drip.setAttribute('r','2');
-  doFill();
-}
-function stopDispense(){
-  if(!filling)return;
-  filling=false;
-  drip.setAttribute('r','0');
-  const w=document.querySelectorAll('.well')[activeIdx];
-  if(w){w.classList.remove('filling');}
-  if(activeIdx>=0&&wellData[activeIdx]&&!wellData[activeIdx].scored&&wellData[activeIdx].filled>0){
-    scoreWell(activeIdx);
-  }
-  activeIdx=-1;
-}
-
-document.addEventListener('mousedown',e=>{
-  if(!onBench||!gameStarted)return;
-  startDispense(e.clientX,e.clientY);
-});
-document.addEventListener('mouseup',stopDispense);
-document.addEventListener('touchstart',e=>{
-  if(!gameStarted)return;
-  const t=e.touches[0];
-  const br=bench.getBoundingClientRect();
-  if(t.clientX>=br.left&&t.clientX<=br.right&&t.clientY>=br.top&&t.clientY<=br.bottom){
-    pipEl.classList.remove('hidden');
-    onBench=true;
-    movePipette(t.clientX,t.clientY);
-    startDispense(t.clientX,t.clientY);
-  }
-},{passive:true});
-document.addEventListener('touchend',()=>{stopDispense();pipEl.classList.add('hidden');onBench=false;});
-
-function doFill(){
-  if(!filling||activeIdx<0)return;
-  const L=LEVELS[lvl];
-  const w=wellData[activeIdx];
-  if(!w||w.scored)return;
-  w.filled=Math.min(100,w.filled+L.speed);
-  const el=document.querySelectorAll('.well')[activeIdx];
-  el.querySelector('.well-liquid').style.height=w.filled+'%';
-
-  // Spawn drip particle
-  if(Math.random()<0.4) spawnDrip(el);
-
-  // Splash
-  if(Math.random()<0.15) spawnSplash(el,w.filled);
-
-  if(w.filled>=100){stopDispense();return;}
-  raf=requestAnimationFrame(doFill);
-}
-
-function spawnDrip(wellEl){
-  const pr=pipEl.getBoundingClientRect();
-  const d=document.createElement('div');
-  d.className='drip';
-  d.style.left=(pr.left+pr.width/2-2)+'px';
-  d.style.top=(pr.top+pr.height-4)+'px';
-  document.body.appendChild(d);
-
-  const wr=wellEl.getBoundingClientRect();
-  const targetY=wr.top+wr.height*0.3;
-  const dur=200+Math.random()*150;
-  const targetX=wr.left+wr.width/2-2+( Math.random()-0.5)*10;
-
-  d.animate([
-    {top:d.style.top,left:d.style.left,opacity:.9},
-    {top:targetY+'px',left:targetX+'px',opacity:0,transform:'scale(0.5)'}
-  ],{duration:dur,easing:'ease-in'});
-  setTimeout(()=>d.remove(),dur);
-}
-
-function spawnSplash(wellEl,fillPct){
-  const s=document.createElement('div');
-  s.className='splash';
-  const sz=4+Math.random()*6;
-  s.style.width=sz+'px'; s.style.height=sz+'px';
-  s.style.left=(20+Math.random()*60)+'%';
-  s.style.bottom=(fillPct-2)+'%';
-  wellEl.appendChild(s);
-  setTimeout(()=>s.remove(),400);
-}
-
-function scoreWell(idx){
-  const w=wellData[idx];
-  w.scored=true;
-  const diff=Math.abs(w.filled-w.target);
-  const L=LEVELS[lvl];
-  let grade,cls,pts;
-  if(diff<=L.tol*0.3){grade='PERFECT!';cls='perfect';pts=100;}
-  else if(diff<=L.tol){grade='Good';cls='good';pts=Math.round(70+30*(1-diff/L.tol));}
-  else if(diff<=L.tol*2){grade='OK';cls='ok';pts=Math.round(30+40*(1-diff/(L.tol*2)));}
-  else{grade='Miss';cls='bad';pts=Math.max(0,Math.round(30*(1-diff/50)));}
-
-  score+=pts; done++;
-  const el=document.querySelectorAll('.well')[idx];
-  el.classList.add('done','result-'+cls);
-  const pop=el.querySelector('.well-popup');
-  pop.className='well-popup '+cls;
-  pop.textContent=grade+' +'+pts;
-  void pop.offsetWidth;
-  pop.classList.add('show');
-
-  document.getElementById('hScore').textContent=score;
-  document.getElementById('hWells').textContent=done+'/'+total;
-
-  if(done===total) setTimeout(finishLevel,700);
-}
-
-function finishLevel(){
-  let avgAcc=0, perfects=0;
-  wellData.forEach(w=>{
-    const d=Math.abs(w.filled-w.target);
-    avgAcc+=Math.max(0,100-d*2);
-    if(d<=LEVELS[lvl].tol*0.3)perfects++;
-  });
-  avgAcc=Math.round(avgAcc/wellData.length);
-  const isLast=lvl>=LEVELS.length-1;
-  let icon,title,text;
-  if(avgAcc>=90){icon='🏆';title='Outstanding!';text='Laboratory-certified precision.';}
-  else if(avgAcc>=70){icon='🔬';title='Well Done!';text='Solid technique — nearly perfect.';}
-  else if(avgAcc>=50){icon='🧪';title='Not Bad';text='Usable results — keep practicing!';}
-  else{icon='💧';title='Needs Practice';text='Recalibrate and try again!';}
-  if(isLast){title=avgAcc>=70?'Analysis Complete!':'Test Finished';}
-
-  document.getElementById('ocIcon').textContent=icon;
-  document.getElementById('ocTitle').textContent=title;
-  document.getElementById('ocText').textContent=text;
-  document.getElementById('ocScore').textContent=score;
-  document.getElementById('nextBtn').style.display=isLast?'none':'';
-  document.getElementById('overlay').classList.add('active');
-}
-
-function nextLevel(){
-  if(lvl<LEVELS.length-1){lvl++;document.getElementById('overlay').classList.remove('active');setTimeout(buildLevel,300);}
-}
-
-function buildLevel(){
-  const L=LEVELS[lvl];
-  done=0; total=L.wells; wellData=[];
-  document.getElementById('lvlTag').textContent=L.tag;
-  document.getElementById('lvlLabel').textContent=L.name+' · ±'+L.tol+'%';
-  document.getElementById('hScore').textContent=score;
-  document.getElementById('hWells').textContent='0/'+total;
-  document.getElementById('overlay').classList.remove('active');
-
-  const plate=document.getElementById('plate');
-  plate.style.setProperty('--cols',L.cols);
-  plate.innerHTML='';
-
-  for(let i=0;i<L.wells;i++){
-    const target=25+Math.random()*55;
-    wellData.push({target,filled:0,scored:false});
-    const wrap=document.createElement('div');
-    wrap.className='well-wrap';
-    wrap.innerHTML=`
-      <div class="well-name">${ANALYTES[i%ANALYTES.length]}</div>
-      <div class="well" data-i="${i}">
-        <div class="well-liquid" style="height:0%"></div>
-        <div class="well-target" style="bottom:${target}%">
-          <div class="well-target-label">TARGET</div>
-        </div>
-        <div class="well-popup"></div>
-      </div>`;
-    plate.appendChild(wrap);
-  }
-}
-
-function startGame(){
-  gameStarted=true;
-  document.getElementById('startOverlay').classList.add('hidden');
-  if(onBench) pipEl.classList.remove('hidden');
-}
-
-function resetGame(){
-  lvl=0; score=0; filling=false; activeIdx=-1; gameStarted=false;
-  document.getElementById('overlay').classList.remove('active');
-  document.getElementById('startOverlay').classList.remove('hidden');
-  buildLevel();
-}
-
-// Init
-buildLevel();
 </script>
 </body>
 </html>
