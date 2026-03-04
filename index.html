@@ -310,7 +310,7 @@
 </footer>
 
 <script>
-// Várakozás a teljes betöltésre
+// Main game logic wrapper
 document.addEventListener('DOMContentLoaded', function() {
   
   const Game = {
@@ -324,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
     filling: false,
     animationFrame: null,
     
+    // Level configuration
     config: [
       { cols: 3, count: 3, tol: 10 },
       { cols: 3, count: 6, tol: 7 },
@@ -331,15 +332,17 @@ document.addEventListener('DOMContentLoaded', function() {
     ],
 
     init() {
-      // Eseménykezelők bekötése itt
+      // DOM Elements
       const startBtn = document.getElementById('startBtn');
       const resetBtn = document.getElementById('resetBtn');
       const bench = document.getElementById('bench');
       const pip = document.getElementById('pipCursor');
       
+      // Setup event listeners
       if(startBtn) startBtn.addEventListener('click', () => this.start());
       if(resetBtn) resetBtn.addEventListener('click', () => this.reset());
 
+      // Mouse tracking
       document.addEventListener('mousemove', e => {
         pip.style.left = e.clientX + 'px';
         pip.style.top = e.clientY + 'px';
@@ -357,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.stopFill();
       });
 
-      // Touch Events
+      // Handle touch devices
       if(bench) {
         bench.addEventListener('touchstart', (e) => {
           e.preventDefault();
@@ -404,10 +407,11 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('dispLvl').innerText = `${this.level}/${this.maxLevels}`;
       document.getElementById('dispScore').innerText = this.totalScore;
 
+      // Sample names based on Romer Labs products
       const labels = ["Aflatoxin", "DON", "Fumonisin", "Zearalenone", "Ochratoxin", "T-2", "Gluten", "Soy"];
 
       for (let i = 0; i < cfg.count; i++) {
-        const target = Math.floor(Math.random() * 50) + 30; // 30-80%
+        const target = Math.floor(Math.random() * 50) + 30; // Random target 30-80%
         const div = document.createElement('div');
         div.className = 'well-container';
         div.innerHTML = `
@@ -459,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     },
 
+    // Main animation loop for liquid filling
     loop() {
       if (!this.filling) return;
       const w = this.wells[this.currentWellIdx];
@@ -470,6 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const liq = w.el.querySelector('.liquid');
       liq.style.height = w.filled + '%';
       
+      // Visual feedback for overfilling
       if(w.filled > w.target + 5) {
          liq.classList.add('overfilled');
       }
@@ -482,6 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     },
 
+    // Calculate score based on precision
     scoreWell(idx) {
       const w = this.wells[idx];
       w.done = true;
@@ -520,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
       pop.style.color = color;
       pop.classList.add('anim');
 
+      // Check if level is completed
       if (this.wells.every(x => x.done)) {
         setTimeout(() => this.nextLevel(), 1000);
       }
@@ -548,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // Játék indítása
+  // Run initialization
   Game.init();
 });
 </script>
